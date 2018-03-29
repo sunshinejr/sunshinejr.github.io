@@ -3,25 +3,25 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://sunshinejr.com/about/</loc>
+    <loc>http://sunshinejr.com/about/</loc>
   </url>
   
   <url>
-    <loc>https://sunshinejr.com/categories/</loc>
+    <loc>http://sunshinejr.com/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://sunshinejr.com/</loc>
+    <loc>http://sunshinejr.com/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://sunshinejr.com/speaking/</loc>
+    <loc>http://sunshinejr.com/speaking/</loc>
   </url>
   
   <url>
-    <loc>https://sunshinejr.com/tags/</loc>
+    <loc>http://sunshinejr.com/tags/</loc>
     <priority>0</priority>
   </url>
   
