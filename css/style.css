@@ -237,6 +237,11 @@ nav.main-nav a.cta {
     padding: 0px 40px 20px 40px;    
 }
 
+#comming_soon {
+    text-align: center; 
+    color: #aaa;
+}
+
 .home #avatar {
     float: right;
     width: 40px;
