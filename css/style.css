@@ -200,7 +200,7 @@ nav.main-nav a.cta {
       background: #fff;
       background: rgba(255, 255, 255, .90);
       margin: 0 auto;
-      text-align: right;
+      text-align: center;
       z-index: 100;
   }
   nav.main-nav a {
@@ -944,4 +944,111 @@ a.symbol:hover {
 }
 .page-tags ul li a:hover {
     color: #5694f1;
+}
+
+#gh-comments-list {
+    display: flex; 
+    flex-direction: column;
+}
+
+#gh-comments-list h1 {
+    font-weight: bold;
+}
+
+.gh-comment {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 15pt;
+}
+
+.gh-comment .gh-comment-left {
+    flex-basis: 40pt;
+    margin-right: 10pt;
+    flex-shrink: 0;
+}
+
+.gh-comment .gh-comment-right {
+    border: 1px solid #d1d5da;
+    border-radius: 3pt;
+    flex-basis: auto;
+    flex-grow: 2;
+}
+
+.gh-comment .gh-comment-right .gh-comment-title {
+    border-bottom: 1px solid #d1d5da;
+    padding-left: 15pt; 
+    padding-right: 15pt;
+    height: 40pt; 
+    display: flex; 
+    align-items: center; 
+    background-color: #F6F8FA;
+    font-size: 10pt;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.gh-comment .gh-comment-right .gh-comment-body {
+    padding: 15pt 15pt 15pt 15pt;
+    flex-wrap: wrap;
+    text-overflow: ellipsis;
+    font-size: 11pt;
+}
+
+.gh-comment .gh-comment-right .gh-comment-body code {
+    word-break: break-all;
+}
+
+.gh-comment .gh-comment-right .gh-comment-body p {
+    margin-bottom: 0pt;
+    line-height: 16pt;
+}
+
+.gh-comment .gh-comment-right .gh-comment-body li {
+    margin-bottom: 3pt;
+    margin-top: 3pt;
+    line-height: 15pt;
+}
+
+#gh-comments-list a.button {
+    padding: 8px 12px;
+    color: #F15A24;
+    font-size: 13px;
+    line-height: 1.35;
+    border-radius: 3px;
+    background: #F15A24;
+    color: #fff;
+    margin-left: 12px;
+    display: inline-table;
+    margin-top: 20px;
+}
+
+#profile_pic {
+    width: 24%;
+    float: left;
+}
+
+#profile_pic_body {
+    width: 72%; 
+    float: left; 
+    margin-left: 20pt; 
+    margin-top: -7pt;
+}
+
+@media (max-width: 550pt) {
+    #profile_pic {
+        width: 100%;
+        float: none;        
+        text-align: center;
+        margin-bottom: 20pt;
+    }
+
+    #profile_pic img {
+        width: 80%;
+    }
+
+    #profile_pic_body {
+        width: 100%; 
+        float: none; 
+        margin-left: 10pt; 
+    }    
 }
