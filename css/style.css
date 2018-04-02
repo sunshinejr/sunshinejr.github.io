@@ -264,6 +264,10 @@ p a {
     color: #F15A24;
 }
 
+p a:hover {
+    text-decoration: underline;
+}
+
 
 /*Transitions*/
 
@@ -373,7 +377,7 @@ em, i {
     display: block;
 }
 
-.post h2.headline .tags a {
+.post h2.headline .tags a:hover {
     text-decoration: underline;
 }
 
