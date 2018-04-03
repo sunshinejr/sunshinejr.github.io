@@ -6,9 +6,55 @@
     <description>Recent content in Tags on Programming adventures</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
+    <lastBuildDate>Tue, 03 Apr 2018 17:02:50 +0100</lastBuildDate>
     
 	<atom:link href="http://sunshinejr.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Danger</title>
+      <link>http://sunshinejr.com/tags/danger/</link>
+      <pubDate>Tue, 03 Apr 2018 17:02:50 +0100</pubDate>
+      
+      <guid>http://sunshinejr.com/tags/danger/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Open Source</title>
+      <link>http://sunshinejr.com/tags/open-source/</link>
+      <pubDate>Tue, 03 Apr 2018 17:02:50 +0100</pubDate>
+      
+      <guid>http://sunshinejr.com/tags/open-source/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>http://sunshinejr.com/tags/python/</link>
+      <pubDate>Tue, 03 Apr 2018 17:02:50 +0100</pubDate>
+      
+      <guid>http://sunshinejr.com/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Typescript</title>
+      <link>http://sunshinejr.com/tags/typescript/</link>
+      <pubDate>Tue, 03 Apr 2018 17:02:50 +0100</pubDate>
+      
+      <guid>http://sunshinejr.com/tags/typescript/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Xiblint</title>
+      <link>http://sunshinejr.com/tags/xiblint/</link>
+      <pubDate>Tue, 03 Apr 2018 17:02:50 +0100</pubDate>
+      
+      <guid>http://sunshinejr.com/tags/xiblint/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="http://sunshinejr.com/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="Open Source Adventures #1 - Xiblint"/>
+  <meta name="twitter:description" content="I wanted to implement this one simple feature for our CI setup and ended up learning Python and Typescript instead..."/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.37" />
+		<title>Open Source Adventures #1 - Xiblint &middot; Programming adventures</title>
+		<link rel="shortcut icon" href="http://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://sunshinejr.com/css/style.css">
+		<link rel="stylesheet" href="http://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="http://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="http://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures" />
+		
+
+		
+
+      <script src="http://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="http://sunshinejr.com/js/main.js"></script>
+      <script src="http://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='http://sunshinejr.com/'>Blog</a>
+	<a href='http://sunshinejr.com/about'>About</a>
+	<a href='http://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="http://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        Open Source Adventures #1 - Xiblint
+                    </h1>
+                    <h2 class="headline">
+                    Apr 3, 2018 17:02
+                    
+                    · 12 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://sunshinejr.com/tags/open-source">#open-source</a>
+                          
+                              <a href="http://sunshinejr.com/tags/python">#python</a>
+                          
+                              <a href="http://sunshinejr.com/tags/xiblint">#xiblint</a>
+                          
+                              <a href="http://sunshinejr.com/tags/typescript">#typescript</a>
+                          
+                              <a href="http://sunshinejr.com/tags/danger">#danger</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    <p>I really like to work on <strong>Open Source Software</strong>. It is something different. You can find there many different problems or aspects that simply do not exist in a day-to-day job. There is also a lot of unexplored ground and I think that excites me the most. In this series, <em>Open Source Adventures</em>, I would like to explore them with you. This is the first post of the series and it covers a story about this &ldquo;one simple feature&rdquo; I wanted to implement&hellip;</p>
+
+<p>
+<center><img src="https://media.giphy.com/media/zP8xzl4QNAW8U/giphy.gif" alt="Yeah right..." style="width: 480px;" /></center></p>
+
+<h1 id="background-story">Background story</h1>
+
+<p>At <a href="https://www.thedroidsonroids.com">Droids On Roids</a>, we try to make our lives better not only by improving our code, but also by automating everything that&rsquo;s possible. Thus, when we first found out about <a href="https://github.com/danger/danger">Danger</a> (a tool in which you can have a set of rules for each <strong>Pull Request</strong>) and <a href="https://github.com/realm/swiftlint">SwiftLint</a> (a <a href="https://en.wikipedia.org/wiki/Lint_%28software%29">linter</a> for Swift), we created a small internal project to compare them with similar tools on the market. Then, we decided to go with a <strong>Danger/SwiftLint</strong> setup for all our iOS projects - mostly because we could have a much bigger impact on it, as it&rsquo;s open-sourced. Now, after quite some time, they play a big role in our pull request process and we&rsquo;re really happy with it.</p>
+
+<p>That was also back when Danger was only available in Ruby. Right now, there is a port in Javascript/Typescript <em>and</em> Swift. This allows writing configuration files (that is, <code>Dangerfile</code>s) in any of these languages as well. This is great because it allows iOS developers to write configuration files with tools they normally use and are familiar with. Unfortunately, Swift version is dependent on Javascript version and so we didn&rsquo;t introduce it as JS version still required some work (e.g. <a href="https://github.com/danger/Danger JS/issues/77">Inline mode</a> wasn&rsquo;t there — and we use it quite frequently).</p>
+
+<p>About a month ago I found <strong><a href="https://github.com/lyft/xiblint">xiblint</a></strong> - a linter for Xibs &amp; Storyboards, the UI part of iOS apps. As we had a great linter for the backend already, this was a perfect fit for our frontend. We just needed to port this library to Danger. That meant creating a Danger plugin; fortunately, the process is quite straightforward — especially with the help of this <a href="http://danger.systems/guides/creating_your_first_plugin.html">nice tutorial on the Danger website</a>.</p>
+
+<h1 id="xiblint">xiblint</h1>
+
+<p>Before creating a plugin, I needed to get a sense of the library itself, to see if I could use it without any modifications. My go-to technique in these situations is to browse some of the code online and then, if I decide that it&rsquo;s doable, <code>git clone</code> and play with it.</p>
+
+<p>I noticed that xiblint is a Python library. Python alone isn&rsquo;t a problem - as I have some scripting experience from a few years back - I just didn&rsquo;t know anything about structuring, creating or using a Python library. And because the library itself didn&rsquo;t have any documentation, I had to learn how to run it locally so I could change things here and there and have a quick feedback.</p>
+
+<p>My first idea was to start looking for a Python library that had that specific info inside a Readme — unfortunately without luck. I returned back to the old and gold technique: pray to Google. Typed in &ldquo;How to install Python package&rdquo; and guess what — of course there was a question about it on Stack Overflow already:</p>
+
+<blockquote>
+<p><a href="https://stackoverflow.com/questions/15268953/how-to-install-python-package-from-github">How to install Python package from GitHub?</a></p>
+</blockquote>
+
+<p>I found at least two ways of installing the library: using <code>pip</code> and locally using <code>python install</code>. When I figured it out, <a href="https://github.com/lyft/xiblint/pull/9">I created a pull request to the library</a> with a little installation guide. This one might be obvious for library maintainers or people who had experience in the Python ecosystem, but for potential contributors that do not know much about it, it might even be a blocker. Thus, this was my first takeaway:</p>
+
+<p><strong>I should always try to write a Readme for this one contributor that knows how to program things, but doesn&rsquo;t really know anything about the ecosystem, development process, installation or usage of the library.</strong></p>
+
+<p>As a side note, after the code review, it turned out that there is another way of installing a Python library when it&rsquo;s released in <code>pypi</code>. What a time to be alive 😄</p>
+
+<h2 id="adding-xiblint-to-the-danger-plugin">Adding xiblint to the Danger plugin</h2>
+
+<p>So I was playing with xiblint for a while and then I saw that it could only return a <code>raw</code> output:</p>
+
+<pre><code>./Project/Base.lproj/LaunchScreen.storyboard:3: error: retina4_7: Simulated metrics (&quot;View As:&quot;) must be one of: retina4_0, watch38 [rule: simulated_metrics_retina4_0]
+</code></pre>
+
+<p>This is <em>probably</em> somehow readable to people, but our Danger plugin would need to parse this output before it could be useful. From this raw output I would need to get the following:</p>
+
+<ul>
+<li>a line</li>
+<li>a rule</li>
+<li>a file</li>
+<li>an error message</li>
+</ul>
+
+<p>And, I mean, I <em>could try</em> to get all of these using regular expressions, but a small change of its syntax would probably break <em>everything</em>. As you can imagine, it is not a <strong>dream come true</strong> from a maintainer&rsquo;s point of view, because the library would need additional time spent on validating that <em>it still works</em>.</p>
+
+<p>However, the there is a simpler solution: update xiblint so it can return a plugin-readable output. And because JSON is highly supported on all the languages that Danger supports (Javascript, Ruby and Swift) it was my first choice. The response could look like the following:</p>
+
+<pre><code class="language-json">[  
+   {  
+      &quot;line&quot;: 3,
+      &quot;rule&quot;: &quot;simulated_metrics_retina4_0&quot;,
+      &quot;file&quot;: &quot;./Project/Base.lproj/LaunchScreen.storyboard&quot;,
+      &quot;error&quot;: &quot;retina4_7: Simulated metrics (\&quot;View As:\&quot;) must be one of: retina4_0, watch38&quot;
+   }
+]
+</code></pre>
+
+<p><center><img src="http://gifimage.net/wp-content/uploads/2017/08/its-so-beautiful-gif-6.gif" alt="Perfection" style="width: 480px;" /></center></p>
+
+<p>So I looked at how <strong>SwiftLint</strong> does this and it just has a parameter that specifies a &ldquo;reporter&rdquo;. You can select one of many reporters, including HTML, JSON and Emoji 🤔. For this case though, I just needed <del>an emoji</del> a JSON reporter, but scaling possibilities are exciting indeed.</p>
+
+<p>So I started implementing something similar. I knew that I needed to add a <code>--reporter</code> parameter to the executable, so I looked if there was any parameter used in the library and build on that. It turned out that there was, indeed, a <code>--version</code> parameter. I looked for a Python package that it was imported from, <code>argparse</code>, and I started reading <a href="https://docs.python.org/3/library/argparse.html">its documentation</a>. Quickly after, <a href="https://github.com/lyft/xiblint/pull/10/commits/268d8861febd2fc0fc36cb471a2ccf3d5204babd">the first commit</a> was born:</p>
+
+<p><img src="img/first_commit.png" alt="First commit to xiblint" /></p>
+
+<p>As you can see, there is a <code>raw</code> reporter as a default. This is because I didn&rsquo;t want to break things unnecessarily. This library has been on the market for quite some time and requiring an additional parameter would be a breaking change, thus needing a major release (following <a href="https://semver.org">Semantic Versioning</a>).</p>
+
+<p>After the parameter setting, I just needed a way of returning an output based on the <code>reporter</code>. A few hours later the <a href="https://github.com/lyft/xiblint/pull/10">second PR was born</a>. In this one, I asked if this is something the maintainers would like to see — and if not, I could just work on my own fork.</p>
+
+<p>You need to remember that <strong>even though it seems like a perfectly fine use case for me, someone might have a different vision for the project — and that is totally fine</strong>! The beauty of Open Source is that I can expand the project using my own fork, while still syncing the core design with its original version (of course then you need to make sure the <strong>License</strong> is allowing you to do such things, but from my experience most of the time it does).</p>
+
+<p>You can also spot that I don&rsquo;t really have experience with Python libraries or xiblint itself but I still created a pull request with whatever I came up with. I could try to master my pull request with weeks of research just to seem like a Python veteran. I didn&rsquo;t do it though, because on the other side there is a person that knows both the project and Python well enough, so if there is a way to improve the pull request, they will surely point it out. And if it is a complete mess — I&rsquo;m also cool with it. I will do my best to create a new one with the given feedback. This is something I learned over the years. But if the fear of failure is stopping <strong>you</strong> from doing Open Source or blogging, I encourage you to watch <a href="https://www.youtube.com/watch?v=SjjvnrqDjpM">this talk by Ash Furrow</a>, about <strong>Teaching and Learning</strong>. It helped me a lot, maybe it will help you as well.</p>
+
+<h2 id="danger-plugin">Danger plugin</h2>
+
+<p>This second pull request meant that I could finally start working on the Danger plugin. Of course, the end product would be a <strong>Swift</strong> Danger plugin, but before that, I needed to create this <strong>Inline mode</strong> feature for Danger JS so I can use it in Danger Swift&hellip;</p>
+
+<h2 id="danger-js-and-typescript">Danger JS and Typescript</h2>
+
+<p>In the end, why wouldn&rsquo;t I want to implement the most requested feature for Danger JS? Especially because the issue has been reported for more than a year and a few contributors already tried to implement it. These are good indicators for having some <strong>F U N</strong>. And, because I always wanted to learn Typescript, it was a perfect match.</p>
+
+<p><center><img src="https://media.giphy.com/media/26BRHKYhKLd6PlwsM/giphy.gif" alt="Let's have some fun!" style="width: 480px;" /></center></p>
+
+<p>Similarly to xiblint, I needed a way of testing my local changes to see if the library works as expected. Unfortunately, because of the domain of Danger, most of the testing had to be done on our <strong>Continuous Integration</strong> infrastructure. <a href="https://github.com/Moya/Harvey/pull/17">So I opened a pull request</a> on <a href="https://github.com/Moya/Harvey">Harvey</a>, a smaller project that we like to test things on:</p>
+
+<p><img src="img/todolist_harvey.png" alt="Test pull request on Harvey" /></p>
+
+<p>As you can see, I already prepared the environment to test not only my fork of Danger JS but also the end product — my fork of Danger Swift and Danger SwiftLint. I created four <strong>work in progress</strong> pull requests in total, just for testing Danger. By doing that I let people know that the feature is in the works so they can potentially avoid duplicating work.</p>
+
+<p>Setting this all up was not an easy task for me, especially running my own fork of Danger JS on CI. If you are interested in the final code, take a look at <a href="https://github.com/Moya/Harvey/blob/b4ddd52384b9df0269e749774dc0a952b9a9c7f2/circle.yml">this Harvey Circle CI setup</a>. This could take me weeks, so I reached out to <a href="https://twitter.com/orta">Orta</a>, the Danger creator, for help:</p>
+
+<p><img src="img/orta_help.png" alt="Orta helping me out with Danger JS on CI" /></p>
+
+<p>His solution <em>almost</em> worked, I just had to google this one tiny little error that I&rsquo;ve got&hellip; 😄 And the fix was, <em>of course</em>, one tiny little flag to add&hellip; 🤣 Oh boy, how I <em>looooove</em> command line.</p>
+
+<p>Then, I started making a TODO list for Danger JS&rsquo; pull request. This was a big task and I wanted to make sure that I <em>see</em> the progress that I make. Otherwise, I could just end up abandoning the work whenever I get lost.</p>
+
+<p><img src="img/todolist_inline_mode.png" alt="Todolist for inline mode" /></p>
+
+<p>As you can see in the screenshot, I based my pull request on another. This is because Danger JS already had a really big pull request in the works — support for Bitbucket Server. And because I knew that this could have a really big impact on my pull request, I needed to merge our branches as soon as possible. This is another takeaway:</p>
+
+<p><strong>Try to look if there is a big pull request in the works already when you start working on your another big one. If possible, merge it as soon as possible and watch the updates on this issue. The amount of work may increase as time passes by. Sometimes you might even end up starting again from scratch.</strong></p>
+
+<p>My works started with a <strong>Proof of Concept</strong>. It had some really ugly code in it, but I wanted to see if it was possible for me to do. Then, because Danger is used by many people and I reworked its core functionality, I wrote the biggest amount of tests for a feature in my entire life. I felt really comfortable running a test on CI afterwards.</p>
+
+<p>When it comes to Typescript, first I played with the <a href="http://typescriptlang.org/play/">online playground</a>. Then, when  implementing the feature, I just started by copying the style from current codebase and improved it after reading some stuff online. With Jest, the testing framework, <a href="https://facebook.github.io/jest/docs/en/getting-started.html">their docs</a> answered all questions I had.</p>
+
+<p>After a significant amount of time, more tips from Orta, learning how to <a href="https://stackoverflow.com/questions/2529441/how-to-read-the-output-from-git-diff">analyze git diff syntax</a>&hellip;</p>
+
+<p><img src="img/analyzing_git_diff.png" alt="Analyzing git diff syntax" /></p>
+
+<p>&hellip; and a few more long nights spent with Jest (which is awesome, btw) it happened. The <strong>Inline mode</strong> was finished and I could move to the Swift section&hellip;</p>
+
+<p>Or at least that&rsquo;s what I thought:</p>
+
+<p><img src="img/orta_doesnt_work.png" alt="Orta saying that it doesn't work..." /></p>
+
+<p>It turned out that the bug was not related to the PR, it just became visible when I implemented it. Nevertheless, I&rsquo;ve fixed it as well and we shipped it! 🚢</p>
+
+<p><img src="img/shipped_it.png" alt="Shipped it!" /></p>
+
+<p>&hellip;5 times 😅</p>
+
+<p><img src="img/shipping_it.png" alt="Shipping it!" /></p>
+
+<p>At the end of the day, I just couldn&rsquo;t possibly get it right on the first try, could I? 😅 But then, safely, I could proceed to the Swift section.</p>
+
+<h2 id="danger-swift-and-danger-swiftlint">Danger Swift and Danger SwiftLint</h2>
+
+<p>About a month before the xiblint adventure I implemented a fix to Danger Swift and a feature to Danger SwiftLint - so I already knew the domain. And also, Swift. After about a month in Python and Typescript, in a completely unknown universe, it felt really comfortable. Even though those are still <strong>external libraries</strong> - not created or maintained by me - I just happen to know Swift on a comfortable level. This gave me some real confidence boost and in a few hours, these two (<a href="https://github.com/danger/danger-swift/pull/56">#1</a> and <a href="https://github.com/ashfurrow/danger-swiftlint/pull/9">#2</a>) were also finished.</p>
+
+<p>Finally, the whole feature was completed and I saw a comment issued by MoyaBot, using Danger SwiftLint and Danger Swift, processed by Danger JS:</p>
+
+<p><img src="img/moyabot_comment.png" alt="MoyaBot comment" /></p>
+
+<p>It felt <em>awesome</em> when all the time spent on this feature paid off with a working product. Not only because I needed it, but also because some people were waiting for this so they can switch to Danger JS as well.</p>
+
+<p>The code is not perfect and there gonna be bugs, that&rsquo;s for sure. But for every bug we fixed, we wrote at least one test. By doing so we&rsquo;re gonna make it easier for other people to make changes in the core, as it will be battle-tested.</p>
+
+<h1 id="the-aftermath">The aftermath</h1>
+
+<p>Unfortunately, I didn&rsquo;t even <em>start</em> writing a xiblint plugin for Danger 😅. <strong>But</strong> a good foundation has been created though, so I might do it in the future.</p>
+
+<p>I could also say that I worked for about a month on a feature that I didn&rsquo;t finish. <strong>But</strong> I learned some Python and Typescript voodoo. Oh and Jest. I really like Jest, I wish there was a counterpart library for Swift&hellip;</p>
+
+<p>Still, I call it #worth.</p>
+
+<p>&hellip;</p>
+
+<p>Thank you so much for reading until the end! This is the first post in the series, so please let me know what do you think.</p>
+
+<p>Thanks again and see you in the next one!</p>
+                </section>
+            </article>
+
+            
+                <span style="float: right;">
+<a class="twitter" href="https://twitter.com/intent/tweet?text=Open%20Source%20Adventures%20%231%20-%20Xiblint by @thesunshinejr - http%3a%2f%2fsunshinejr.com%2f2018%2f04%2f03%2fopen-source-adventures-xiblint%2f"><span class="icon-twitter"> tweet</span></a>
+or
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> share</span>
+</a>
+</span>
+<div style="clear: both;"></div>
+            
+
+            
+                <div id="gh-comments-list"><h1>Comments</h1></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/1"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/1/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.v3.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div></div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>
