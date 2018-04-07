@@ -1017,6 +1017,19 @@ a.symbol:hover {
     line-height: 15pt;
 }
 
+.gh-comment .gh-comment-right .gh-comment-reactions {
+    border-top: 1px solid #e1e4e8;
+    display: block;    
+    box-sizing: border-box;
+}
+
+.gh-comment .gh-comment-right .gh-comment-reactions .gh-comment-reactions-option {
+    padding: 10pt;
+    border-right: 1pt solid #e1e4e8;
+    display: table-cell;
+    font-size: 11pt;
+}
+
 #gh-comments-list a.button {
     padding: 8px 12px;
     color: #F15A24;

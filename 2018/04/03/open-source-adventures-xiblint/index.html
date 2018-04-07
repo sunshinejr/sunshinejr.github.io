@@ -296,7 +296,7 @@ or
 
     $(document).ready(function () {
         $.ajax(api_url, {
-            headers: { Accept: "application/vnd.github.v3.html+json" },
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
             dataType: "json",
             success: function(comments) {
                 if (comments.length > 0) {
@@ -310,7 +310,26 @@ or
                         t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
                         t += "</div><div class='gh-comment-body'>";
                         t += comment.body_html;
-                        t += "</div></div></div>";
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
                         $("#gh-comments-list").append(t);
                     });
                 } else {
