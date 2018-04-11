@@ -172,10 +172,10 @@ provider.request(MultiTarget(GitHubUsers.showUser(id: 1)))
 <p>Quite often when using Moya in bigger apps you have some sort of an abstraction layer (e.g. <a href="https://github.com/Moya/Moya/blob/master/docs/Examples/WrappingInAdapter.md">to handle errors or offline mode</a>). Let&rsquo;s assume we have this simple abstraction:</p>
 
 <pre><code class="language-swift">struct Network {
-		let provider = MoyaProvider&lt;MultiTarget&gt;()
-
-	  init() {...}
-	  func request(_ target: MultiTarget, response: (Response) -&gt; Void) {...}
+    let provider = MoyaProvider&lt;MultiTarget&gt;()
+    
+    init() {...}
+    func request(_ target: MultiTarget, response: (Response) -&gt; Void) {...}
 }
 </code></pre>
 
