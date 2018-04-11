@@ -6,10 +6,19 @@
     <description>Recent content on Programming adventures</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 03 Apr 2018 17:02:50 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 11 Apr 2018 17:01:01 +0100</lastBuildDate>
     
-	<atom:link href="http://sunshinejr.com/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="http://sunshinejr.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Scaling Moya in production</title>
+      <link>http://sunshinejr.com/2018/04/11/scaling-moya-in-production/</link>
+      <pubDate>Wed, 11 Apr 2018 17:01:01 +0100</pubDate>
+      
+      <guid>http://sunshinejr.com/2018/04/11/scaling-moya-in-production/</guid>
+      <description>There is a big misconception that Moya is not scalable in the real world. People often see it as a &#34;big enum of death&#34;. Today, I want to show you that this is in fact not true at all.</description>
+    </item>
     
     <item>
       <title>Open Source Adventures #1 - Xiblint</title>
@@ -17,7 +26,7 @@
       <pubDate>Tue, 03 Apr 2018 17:02:50 +0100</pubDate>
       
       <guid>http://sunshinejr.com/2018/04/03/open-source-adventures-xiblint/</guid>
-      <description>&lt;p&gt;I really like to work on &lt;strong&gt;Open Source Software&lt;/strong&gt;. It is something different. You can find there many different problems or aspects that simply do not exist in a day-to-day job. There is also a lot of unexplored ground and I think that excites me the most. In this series, &lt;em&gt;Open Source Adventures&lt;/em&gt;, I would like to explore them with you. This is the first post of the series and it covers a story about this &amp;ldquo;one simple feature&amp;rdquo; I wanted to implement&amp;hellip;&lt;/p&gt;</description>
+      <description>I wanted to implement this one simple feature for our CI setup and ended up learning Python and Typescript instead...</description>
     </item>
     
   </channel>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="http://sunshinejr.com/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="Scaling Moya in production"/>
+  <meta name="twitter:description" content="There is a big misconception that Moya is not scalable in the real world. People often see it as a &#34;big enum of death&#34;. Today, I want to show you that this is in fact not true at all."/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.37" />
+		<title>Scaling Moya in production &middot; Programming adventures</title>
+		<link rel="shortcut icon" href="http://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://sunshinejr.com/css/style.css">
+		<link rel="stylesheet" href="http://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="http://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="http://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures" />
+		
+
+		
+
+      <script src="http://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="http://sunshinejr.com/js/main.js"></script>
+      <script src="http://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='http://sunshinejr.com/'>Blog</a>
+	<a href='http://sunshinejr.com/about'>About</a>
+	<a href='http://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="http://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        Scaling Moya in production
+                    </h1>
+                    <h2 class="headline">
+                    Apr 11, 2018 17:01
+                    
+                    · 4 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://sunshinejr.com/tags/swift">#swift</a>
+                          
+                              <a href="http://sunshinejr.com/tags/moya">#moya</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    
+
+<p><center><img src="img/moya.png" alt="Moya" style="width: 200px;" /></center></p>
+
+<p><a href="https://github.com/Moya/Moya">Moya</a> is a network abstraction layer that leverages Swift&rsquo;s APIs like <code>enum</code>s to make working with the network layer better than ever. However, we often hear that Moya is not scalable in the real world and you&rsquo;ll end up with this one big enum that&rsquo;s difficult to maintain. This is the case only if don&rsquo;t use Moya to its full potential - and in this blog post, I&rsquo;ll show you some built-in tools to scale Moya in production.</p>
+
+<h1 id="basic-setup">Basic setup</h1>
+
+<p>A basic Moya setup is an implementation of <code>TargetType</code> that covers your whole service:</p>
+
+<pre><code class="language-swift">enum GitHub {
+    case showUser(id: Int)
+    case createUser(firstName: String, lastName: String)
+    case updateUser(id: Int, firstName: String, lastName: String)
+    case createIssue(repoId: Int, body: String)
+    case showIssues(repoId: Int)
+}
+</code></pre>
+
+<p>As you can see we have all endpoints in this one enum. And as long as you have only a few possible endpoints, you&rsquo;re going to be fine. The problem arrives when you have 200 endpoints and the enum just grows and grows and grows&hellip;</p>
+
+<p>Usually, due to many reasons, we just add another case to our <code>TargetType</code> and pray that it will be the last one. But we can do better than this.</p>
+
+<h1 id="splitting-the-massive-targettype">Splitting the Massive TargetType</h1>
+
+<p>We could try to split the <code>TargetType</code> into multiple smaller ones. For instance, we could split our <code>GitHub</code> target into <code>Users</code> and <code>Issues</code>:</p>
+
+<pre><code>enum GitHubUsers {
+    case showUser(id: Int)
+    case createUser(firstName: String, lastName: String)
+    case updateUser(id: Int, firstName: String, lastName: String)
+}
+
+enum GitHubIssues {
+    case createIssue(repoId: Int, body: String)
+    case showIssues(repoId: Int)
+}
+</code></pre>
+
+<p>But now we have a problem because we need multiple providers for multiple targets:</p>
+
+<pre><code class="language-swift">let usersProvider = MoyaProvider&lt;GitHubUsers&gt;()
+let issuesProvider = MoyaProvider&lt;GitHubIssues&gt;()  
+</code></pre>
+
+<p>With only these two simple providers, that do not contain any additional configuration, it&rsquo;s manageable. But in a bigger app, you will not only have a lot more targets but maybe also a few plugins like a plugin for authentication or logging. And then our problems begin. We have to pass multiple providers across multiple abstraction layers and we have to duplicate configurations across providers. Fortunately, there is a rescue in the form of <code>MultiTarget</code>.</p>
+
+<h1 id="multitarget">MultiTarget</h1>
+
+<p>By splitting the targets we already did half of the job. The second half is introducing a <code>MultiTarget</code> into your app.</p>
+
+<p><code>MultiTarget</code> is just a target that connects all other targets. The benefit of that is that you can use only one provider and because of that you&rsquo;ll have all the configurations specified once.</p>
+
+<p>How do we use it? Pretty straight-forward:</p>
+
+<pre><code class="language-swift">let provider = MoyaProvider&lt;MultiTarget&gt;()
+...
+provider.request(MultiTarget(GitHubUsers.showUser(id: 1)))
+</code></pre>
+
+<p>It&rsquo;s alright, but you still have that additional <code>MultiTarget()</code> overhead initializer in <em>every</em> request. But we can fix it as well.</p>
+
+<p>Quite often when using Moya in bigger apps you have some sort of an abstraction layer (e.g. <a href="https://github.com/Moya/Moya/blob/master/docs/Examples/WrappingInAdapter.md">to handle errors or offline mode</a>). Let&rsquo;s assume we have this simple abstraction:</p>
+
+<pre><code class="language-swift">struct Network {
+		let provider = MoyaProvider&lt;MultiTarget&gt;()
+
+	  init() {...}
+	  func request(_ target: MultiTarget, response: (Response) -&gt; Void) {...}
+}
+</code></pre>
+
+<p>We can update our <code>request()</code> function a bit to accept a <code>TargetType</code> instead of a <code>MultiTraget</code>:</p>
+
+<pre><code class="language-swift">func request&lt;T: TargetType&gt;(_ target: T, response: (Response) -&gt; Void) {
+    provider.request(MultiTarget(target))...
+} 
+</code></pre>
+
+<p>This way we will have a cleaner call site as well:</p>
+
+<pre><code class="language-swift">network.request(GitHubUsers.showUser(id: 1))
+</code></pre>
+
+<h1 id="struct-targets">Struct targets</h1>
+
+<p>Sometimes there is also a problem with few endpoints that have so complicated logic that even having 2 endpoints in a target makes it too complicated. And that&rsquo;s when you can switch from an <code>enum</code> to a <code>struct</code>.</p>
+
+<p>It is a little-known fact that Moya also supports structs as targets. And in combination with a <code>MultiTarget</code>, you can make it work pretty smoothly.</p>
+
+<p>Let&rsquo;s say we&rsquo;ve got an endpoint that needs to upload a video and before that upload happens, it needs to generate a thumbnail and resize the video to 720p as well. And you have multiple other operations that also happen there. You could, of course, create an additional object that covers the logic before an upload, but it is also doable by extracting this one endpoint to the struct:</p>
+
+<pre><code class="language-swift">struct VideoUploadTarget: TargetType {
+    var baseURL: URL
+    var path: String
+    var method: Method
+    var sampleData: Data
+    var task: Task
+    var headers: [String : String]?
+    
+    init(videoURL: URL) {
+        // some calculations can happen here or lazily, 
+        // depends on the use-case
+    }
+}
+</code></pre>
+
+<p>And now you can use it with your <code>MultiTarget</code> abstraction to provide an ultimate, scalable experience in your application:</p>
+
+<pre><code class="language-swift">network.request(VideoUploadTarget(videoURL: videoURL))
+</code></pre>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>From my experience, Moya is so flexible that it can handle not only small APIs but also a bigger, commercial product. Using <code>MultiTarget</code> or leveraging structs helps to split one big <code>TargetType</code> into small, manageable objects.</p>
+
+<p>Of course, there are more challenges like how to implement authentication or pagination - but these are focused rather on what is the best/proper way than on if it&rsquo;s possible or not.</p>
+
+<p>I will try to answer more questions about Moya in a similar format in the future. So, if you have questions about scaling or Moya in general, let me know.</p>
+
+                </section>
+            </article>
+
+            
+                <span style="float: right;">
+<a class="twitter" href="https://twitter.com/intent/tweet?text=Scaling%20Moya%20in%20production by @thesunshinejr - http%3a%2f%2fsunshinejr.com%2f2018%2f04%2f11%2fscaling-moya-in-production%2f"><span class="icon-twitter"> tweet</span></a>
+or
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> share</span>
+</a>
+</span>
+<div style="clear: both;"></div>
+            
+
+            
+                <div id="gh-comments-list"><h1>Comments</h1></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/2"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/2/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>
