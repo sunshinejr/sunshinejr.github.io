@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Swift on Programming adventures</title>
+    <link>http://sunshinejr.com/tags/swift/</link>
+    <description>Recent content in Swift on Programming adventures</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 11 Apr 2018 17:01:01 +0100</lastBuildDate>
+    
+        <atom:link href="http://sunshinejr.com/tags/swift/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Scaling Moya in production</title>
+      <link>http://sunshinejr.com/2018/04/11/scaling-moya-in-production/</link>
+      <pubDate>Wed, 11 Apr 2018 17:01:01 +0100</pubDate>
+      
+      <guid>http://sunshinejr.com/2018/04/11/scaling-moya-in-production/</guid>
+      <description>There is a big misconception that Moya is not scalable in the real world. People often see it as a &#34;big enum of death&#34;. Today, I want to show you that this is in fact not true at all.</description>
+    </item>
+    
+  </channel>
+</rss>
