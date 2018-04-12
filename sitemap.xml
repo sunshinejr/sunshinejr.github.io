@@ -17,13 +17,14 @@
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/categories/</loc>
+    <loc>http://sunshinejr.com/tags/danger/</loc>
+    <lastmod>2018-04-03T17:02:50+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/tags/danger/</loc>
-    <lastmod>2018-04-03T17:02:50+01:00</lastmod>
+    <loc>http://sunshinejr.com/tags/ios/</loc>
+    <lastmod>2018-04-11T17:01:01+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -35,12 +36,6 @@
   
   <url>
     <loc>http://sunshinejr.com/tags/open-source/</loc>
-    <lastmod>2018-04-03T17:02:50+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://sunshinejr.com/categories/open-source-adventures/</loc>
     <lastmod>2018-04-03T17:02:50+01:00</lastmod>
     <priority>0</priority>
   </url>
@@ -69,12 +64,6 @@
   
   <url>
     <loc>http://sunshinejr.com/tags/swift/</loc>
-    <lastmod>2018-04-11T17:01:01+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://sunshinejr.com/categories/swift/</loc>
     <lastmod>2018-04-11T17:01:01+01:00</lastmod>
     <priority>0</priority>
   </url>

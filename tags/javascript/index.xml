@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Javascript on Programming adventures</title>
+    <link>http://sunshinejr.com/tags/javascript/</link>
+    <description>Recent content in Javascript on Programming adventures</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 11 Apr 2018 17:01:01 +0100</lastBuildDate>
+    
+        <atom:link href="http://sunshinejr.com/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Learning modern Javascript</title>
+      <link>http://sunshinejr.com/2018/04/11/learning-modern-javascript/</link>
+      <pubDate>Wed, 11 Apr 2018 17:01:01 +0100</pubDate>
+      
+      <guid>http://sunshinejr.com/2018/04/11/learning-modern-javascript/</guid>
+      <description>So, Javascript is everywhere. I figured that I can&#39;t fight it anymore and it&#39;s time to learn some modern Javascript to write an app in React Native. Unfortunately, my knowledge was very limited so I needed to start from the basics. If you are like, follow through.</description>
+    </item>
+    
+  </channel>
+</rss>
