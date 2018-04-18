@@ -41,6 +41,12 @@
   </url>
   
   <url>
+    <loc>http://sunshinejr.com/series/open-source-adventures/</loc>
+    <lastmod>2018-04-03T17:02:50+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://sunshinejr.com/post/</loc>
     <lastmod>2018-04-11T17:01:01+01:00</lastmod>
     <priority>0</priority>
@@ -54,6 +60,12 @@
   
   <url>
     <loc>http://sunshinejr.com/tags/python/</loc>
+    <lastmod>2018-04-03T17:02:50+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://sunshinejr.com/series/</loc>
     <lastmod>2018-04-03T17:02:50+01:00</lastmod>
     <priority>0</priority>
   </url>
