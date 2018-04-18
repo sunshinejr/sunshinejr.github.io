@@ -519,6 +519,15 @@ Post List
     font: bold 19px/1.7 "Helvetica Neue", helvetica, Arial, sans-serif;
 }
 
+#post-list a.series {
+    color: #F15A24; 
+    font-size: 10pt;
+}
+
+#post-list a.series:hover {
+    text-decoration: underline;
+}
+
 #post-list .dates {
     float: right;
     position: relative;
