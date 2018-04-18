@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>series - Programming adventures by sunshinejr</title>
+    <link>http://sunshinejr.com/series/</link>
+    <description>Recent content in series - Programming adventures by sunshinejr</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 03 Apr 2018 17:02:50 +0100</lastBuildDate>
+    
+        <atom:link href="http://sunshinejr.com/series/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Open Source Adventures</title>
+      <link>http://sunshinejr.com/series/open-source-adventures/</link>
+      <pubDate>Tue, 03 Apr 2018 17:02:50 +0100</pubDate>
+      
+      <guid>http://sunshinejr.com/series/open-source-adventures/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
