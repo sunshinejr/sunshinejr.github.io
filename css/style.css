@@ -134,6 +134,35 @@ h2 {
     color: #bbb;
 }
 
+.note {
+    font-style: italic;
+    font-size: 10pt;
+}
+
+.ab {
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.ab .abtext {
+    visibility: hidden;
+    width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    font-size: 10pt;
+}
+
+.ab:hover .abtext {
+    visibility: visible;
+}
+
 .profile #wrapper {
     padding: 60px 40px 0px;
     max-width: 600px;
