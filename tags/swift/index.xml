@@ -6,10 +6,19 @@
     <description>Recent content in swift - Programming adventures by sunshinejr</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 11 Apr 2018 17:01:01 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 23 Apr 2018 18:00:10 +0200</lastBuildDate>
     
         <atom:link href="http://sunshinejr.com/tags/swift/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Open Source Adventures #2 - Marathon</title>
+      <link>http://sunshinejr.com/2018/04/23/open-source-adventures-marathon/</link>
+      <pubDate>Mon, 23 Apr 2018 18:00:10 +0200</pubDate>
+      
+      <guid>http://sunshinejr.com/2018/04/23/open-source-adventures-marathon/</guid>
+      <description>5h Marathon of fixing tests on Linux! I think I&#39;ve got a good time!</description>
+    </item>
     
     <item>
       <title>Scaling Moya in production</title>

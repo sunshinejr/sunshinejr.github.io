@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://sunshinejr.com/2018/04/23/open-source-adventures-marathon/</loc>
+    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://sunshinejr.com/2018/04/11/scaling-moya-in-production/</loc>
     <lastmod>2018-04-11T17:01:01+01:00</lastmod>
   </url>
@@ -29,6 +34,12 @@
   </url>
   
   <url>
+    <loc>http://sunshinejr.com/tags/marathon/</loc>
+    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://sunshinejr.com/tags/moya/</loc>
     <lastmod>2018-04-11T17:01:01+01:00</lastmod>
     <priority>0</priority>
@@ -36,25 +47,25 @@
   
   <url>
     <loc>http://sunshinejr.com/tags/open-source/</loc>
-    <lastmod>2018-04-03T17:02:50+01:00</lastmod>
+    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://sunshinejr.com/series/open-source-adventures/</loc>
-    <lastmod>2018-04-03T17:02:50+01:00</lastmod>
+    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://sunshinejr.com/post/</loc>
-    <lastmod>2018-04-11T17:01:01+01:00</lastmod>
+    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://sunshinejr.com/</loc>
-    <lastmod>2018-04-11T17:01:01+01:00</lastmod>
+    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -66,7 +77,7 @@
   
   <url>
     <loc>http://sunshinejr.com/series/</loc>
-    <lastmod>2018-04-03T17:02:50+01:00</lastmod>
+    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -76,7 +87,7 @@
   
   <url>
     <loc>http://sunshinejr.com/tags/swift/</loc>
-    <lastmod>2018-04-11T17:01:01+01:00</lastmod>
+    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   

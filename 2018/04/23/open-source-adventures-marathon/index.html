@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="http://sunshinejr.com/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="Open Source Adventures #2 - Marathon"/>
+  <meta name="twitter:description" content="5h Marathon of fixing tests on Linux! I think I&#39;ve got a good time!"/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.38.2" />
+		<title>Open Source Adventures #2 - Marathon &middot; Programming adventures by sunshinejr</title>
+		<link rel="shortcut icon" href="http://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://sunshinejr.com/css/style.css">
+		<link rel="stylesheet" href="http://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="http://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="http://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures by sunshinejr" />
+		
+
+		
+
+      <script src="http://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="http://sunshinejr.com/js/main.js"></script>
+      <script src="http://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='http://sunshinejr.com/'>Blog</a>
+	<a href='http://sunshinejr.com/about'>About</a>
+	<a href='http://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="http://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        Open Source Adventures #2 - Marathon
+                    </h1>
+                    <h2 class="headline">
+                    Apr 23, 2018 18:00
+                    
+                    · 7 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://sunshinejr.com/tags/open-source">#open-source</a>
+                          
+                              <a href="http://sunshinejr.com/tags/swift">#swift</a>
+                          
+                              <a href="http://sunshinejr.com/tags/marathon">#marathon</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    
+
+<p><span class="note">(This is a continuation of <a href="http://sunshinejr.com/2018/04/03/open-source-adventures-xiblint/">#1 - Xiblint</a>. You don&rsquo;t necessarily need to read the first part, but you&rsquo;ll get the general context for this one, so if you have some spare minutes I encourage you to read it first ;-)</span>
+<br /><br />
+When I finished all the necessary work for <strong>Danger JS</strong>, I could finally start working on the <strong>DangerXiblint</strong> plugin. And this lovely weekend started off great <a href="https://github.com/lyft/xiblint/pull/10">with my feature being merged to the official Xiblint repo</a>. I immediately started implementing some parts of the plugin and wanted to test it on my <span class="ab">CI<span class="abtext">Continous Integration</span></span>&hellip; And then I noticed that <strong>Danger Swift</strong> is not quite there yet on <strong>Xcode 9.3</strong>&hellip;</p>
+
+<p><center><img src="img/danger_swift_not_working.png" style="width: 500pt;" alt="Danger Swift not working issue..." /></center></p>
+
+<p>Let&rsquo;s fix <strong>Danger Swift</strong> first, I thought!
+<br /><br /></p>
+
+<h1 id="danger-swift">Danger Swift</h1>
+
+<p>I was trying to think about a possible cause of the problem and the first thing that popped in my mind was <strong>Danger JS &lt;-&gt; Danger Swift</strong> compatibility, as we made a lot of big releases lately. The other option could be a breaking change that happened in <strong>Swift 4.1</strong>, although it shouldn&rsquo;t be the case as it was a minor release. Whatever it was, it seemed like a quick fix.</p>
+
+<p>First, I&rsquo;ve made a <a href="https://github.com/Moya/Harvey/pull/22"><span class="ab">PR<span class="abtext">Pull Request</span></span> on Harvey</a> to see what errors do we got on our CI:</p>
+
+<p><img src="img/danger_swift_error.png" alt="" /></p>
+
+<p>This meant that the command that we use to build underlying packages was using an option that was removed from the newest Swift. And after a research, indeed, that was the case:</p>
+
+<p><center><img src="img/redundant_enable_prefetching.png" style="width: 500pt;" alt="Removed --enable-prefetching flag from SPM" /></center></p>
+
+<p><a href="https://bugs.swift.org/browse/SR-6750">As it turned out</a>, the flag <code>--enable-prefetching</code> was already a default behaviour and it was redundant, thus removed.</p>
+
+<p>Now I needed to find <em>where</em> did we use this flag in <strong>Danger Swift</strong>. I couldn&rsquo;t find it in a project or the whole workspace&hellip; And all of a sudden things got interesting. I needed to go <em>deeper</em>.</p>
+
+<p><img src="img/deeper.jpg" alt="" /></p>
+
+<p>I remembered that <strong>Danger Swift</strong> uses <a href="https://github.com/JohnSundell/Marathon">Marathon</a> for resolving underlying packages and configuration file. After a quick search, the flag was indeed in Marathon&rsquo;s sources. This meant working on completely new environment and I couldn&rsquo;t be more excited about it!
+<br /><br /></p>
+
+<h1 id="marathon">Marathon</h1>
+
+<p>Marathon is an abstraction layer over <strong>Swift Package Manager</strong>. It&rsquo;s quite popular as it makes scripting in <strong>Swift</strong> pretty easy. And as it&rsquo;s popular, I knew that someone had to encounter the same problem I had so I searched through issues and PRs first. And of course <a href="https://github.com/JohnSundell/Marathon/pull/161">John was already working on the PR</a>:</p>
+
+<p><center><img src="img/PR_fixing_marathon.png" style="width: 500pt;" alt="John Sundell already fixing Marathon in a PR" /></center></p>
+
+<p>It seemed like the PR is almost complete: only two tests were failing and people were saying that it works on their machines.
+I cloned the repo and ran the test - it seemed to work on my machine as well. Unfortunately, tests on <strong>CI</strong> were still broken, days were passing by, and people couldn&rsquo;t use both <strong>Marathon</strong> and <strong>Danger Swift</strong> on the newest <strong>Xcode</strong>. In that case, many owners could say that the <em>&ldquo;CI is broken&rdquo;</em> and merge it under the pressure of the community. But John did an excellent job and didn&rsquo;t merge it until the fix was there. I wanted to help and move things forward, so I started digging.</p>
+
+<p>The CI was running on Linux, so I knew where to start. I&rsquo;ve installed Swift 4.1 toolchain on my <strong>Ubuntu</strong> server using <a href="https://swiftenv.fuller.li/en/latest/">SwiftEnv</a>, and <a href="https://github.com/JohnSundell/Marathon#on-linux">followed the instructions on how to build &amp; run the tests on Linux</a>. Readme of Marathon is fantastic and it got me up and running quickly.</p>
+
+<p>I ran the tests on my server and (un)fortunately they failed - we were on the right track. Now I had an environment where I reproduced the case each time and had a quick feedback loop on it (where on CI it would take ages to fix).</p>
+
+<h1 id="finding-the-problem">Finding the problem</h1>
+
+<p>One of the dependencies of Marathon, <a href="https://github.com/JohnSundell/Releases">Releases</a>, had two warnings that could possibly be the reason of failure. I fixed both of these and created the PR:</p>
+
+<p><center><img src="img/releases_fix.png" style="width: 500pt;" alt="Fixing Releases" /></center></p>
+
+<p>Unfortunately, even after the fix, the tests were failing.</p>
+
+<h1 id="debugging-on-linux">Debugging on Linux</h1>
+
+<p>Debugging a Swift script on remote Linux machine is similar to debugging JavaScript - <code>print</code>s everywhere. When I was debugging and running the tests, I noticed that they take too much time. I started reading the documentation (<code>swift test --help</code>) in search of a better solution. It turned out that <code>swift test</code> has an option to run only the tests that match the given regex - excellent!</p>
+
+<pre><code class="language-swift">swift test --filter &quot;testInstallingRemoteScriptWithDependenciesUsingRegularGithubURL&quot;
+</code></pre>
+
+<p>Now I could have even quicker feedback loop on the changes I&rsquo;ve made.</p>
+
+<h1 id="finding-the-real-problem">Finding the <em>real</em> problem</h1>
+
+<p>A few checks later I found out that there is a difference between manually cloning the repo and installing the script vs installing the script by using an URL - the former did work, and the latter didn&rsquo;t 😅</p>
+
+<p>This way I isolated my test case to just one function. A few moments later I found out that somehow Linux version of <code>Foundation</code> framework didn&rsquo;t want to fetch the data from the remote location, where the same function on <code>macOS</code> worked fine.</p>
+
+<p>Now I could isolate the problem to one line of code and try to play with it in a <a href="https://developer.apple.com/swift/blog/?id=18">Swift REPL</a> - an environment similar to the LLDB debugger in Xcode.</p>
+
+<h1 id="swift-repl">Swift REPL</h1>
+
+<p>To enter the REPL on Linux you just run the command <code>swift</code> and you&rsquo;re basically ready to go. Oh, unless you want to import a framework like <code>Foundation</code>, then you&rsquo;ll probably see few errors:</p>
+
+<p><center><img src="img/repl_error.png" alt="REPL import error" style="width: 400pt;" /></center></p>
+
+<p><a href="https://github.com/swiftdocker/docker-swift/issues/87">Some smart people on the internet said that this looks like a problem with linker</a>. They even had a solution for <code>Linux Mint</code> - almost similar to mine, but I had to find correct <code>include path</code> for <code>Ubuntu</code> 😅</p>
+
+<pre><code>swift -I /usr/include/clang/4.0.1/include
+</code></pre>
+
+<p>This way I could finally <code>import Foundation</code> in <code>REPL</code> and test fetching data from the remote:</p>
+
+<p><img src="img/data_contentsof_0.png" alt="" /></p>
+
+<p>As you can see the data length is 0, which means that there was some problem along the way.  Normally it should <code>throw</code> an error to let me know about it, but it didn&rsquo;t, so right now we have an error, but we are not sure what error this is. Fortunately, there is this &ldquo;old&rdquo; <code>NSData</code> API that I could use to check the error instead:</p>
+
+<p><img src="img/nsdata_error.png" alt="" /></p>
+
+<p>Uh&hellip; This was almost as useful to me as <code>data.length = 0</code>. Internet also didn&rsquo;t know much about it. But then I remembered that this part of <code>Foundation</code> should be open-sourced already, so I started looking for an answer <a href="https://github.com/apple/swift-corelibs-foundation/blob/master/Foundation/NSData.swift">there</a>. <a href="https://github.com/apple/swift-corelibs-foundation/blob/master/Foundation/NSData.swift#L401">I found a function</a> that could be responsible for the error, but didn&rsquo;t have energy left to research the underlying problem. For now, I stopped as I&rsquo;m not even sure if it&rsquo;s possible to fix with what we have available to us on GitHub. But if you&rsquo;re feeling brave enough to try, please let me know!</p>
+
+<h1 id="the-hotfix">The hotfix</h1>
+
+<p>The hotfix for this problem was to use a terminal command instead of a <code>Foundation</code> function to save the file. The final decision was to use <code>wget</code> as it&rsquo;s widely popular and available:</p>
+
+<p><center><img src="img/wget_fix.png" alt="Wget fix" /></center></p>
+
+<p>If you are interested in the full PR, <a href="https://github.com/JohnSundell/Marathon/pull/169">this is the one</a>.</p>
+
+<h1 id="a-second-fix">A second fix</h1>
+
+<p>Quickly after the PR was merged, <a href="https://twitter.com/steipete/status/987620693171941376">Peter Steinberger noticed</a> that the fix is non-obvious and in the long term, it might be hard to remember why we did this. This is a very good point, and I&rsquo;m sad that I didn&rsquo;t think about it while making the PR. But still, I could make the improvement PR and <span class="ab"><em>&ldquo;file a radar&rdquo;</em><span class="abtext">Report a bug to Apple</span></span>.</p>
+
+<p>Radars are great and I filled a few of them in the past already. The problem with them is that they are not open by default. To make your radars public, you can use <a href="https://openradar.appspot.com/">OpenRadar</a>. I didn&rsquo;t used it before, but now I wanted to add a comment with the radar ID so in the future people can check the status of this problem. For filling radars I use <a href="https://github.com/br1sk/brisk">Brisk</a>, and if you didn&rsquo;t use it yet, I encourage you to do so!</p>
+
+<p>Then, I finished the PR with the fix and a comment: with both the description of the solution and the <a href="https://openradar.appspot.com/39621032">radar</a> in it:</p>
+
+<p><img src="img/improvement_pr.png" alt="" /></p>
+
+<p>Oh, and after the merge I also updated <strong>Danger Swift</strong> and did my first release - it felt incredible:</p>
+
+<p><center><img src="img/first_danger_release.png" style="width: 400pt;" alt="Wget fix" /></center></p>
+
+<p>Hopefully, now I can settle down on finishing <strong>DangerXiblint</strong>&hellip; ;-)</p>
+
+                </section>
+            </article>
+
+            
+                <span style="float: right;">
+<a class="twitter" href="https://twitter.com/intent/tweet?text=Open%20Source%20Adventures%20%232%20-%20Marathon%20by @thesunshinejr - http%3a%2f%2fsunshinejr.com%2f2018%2f04%2f23%2fopen-source-adventures-marathon%2f"><span class="icon-twitter"> tweet</span></a>
+or
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> share</span>
+</a>
+</span>
+<div style="clear: both;"></div>
+            
+
+            
+                <div id="gh-comments-list"><h1>Comments</h1></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/3"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/3/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>
