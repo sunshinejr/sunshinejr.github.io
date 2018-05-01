@@ -3,108 +3,108 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://sunshinejr.com/2018/04/23/open-source-adventures-marathon/</loc>
+    <loc>https://sunshinejr.com/2018/04/23/open-source-adventures-marathon/</loc>
     <lastmod>2018-04-23T18:00:10+02:00</lastmod>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/2018/04/11/scaling-moya-in-production/</loc>
+    <loc>https://sunshinejr.com/2018/04/11/scaling-moya-in-production/</loc>
     <lastmod>2018-04-11T17:01:01+01:00</lastmod>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/2018/04/03/open-source-adventures-xiblint/</loc>
+    <loc>https://sunshinejr.com/2018/04/03/open-source-adventures-xiblint/</loc>
     <lastmod>2018-04-03T17:02:50+01:00</lastmod>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/about/</loc>
+    <loc>https://sunshinejr.com/about/</loc>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/tags/danger/</loc>
+    <loc>https://sunshinejr.com/tags/danger/</loc>
     <lastmod>2018-04-03T17:02:50+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/tags/ios/</loc>
-    <lastmod>2018-04-11T17:01:01+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://sunshinejr.com/tags/marathon/</loc>
-    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://sunshinejr.com/tags/moya/</loc>
+    <loc>https://sunshinejr.com/tags/ios/</loc>
     <lastmod>2018-04-11T17:01:01+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/tags/open-source/</loc>
+    <loc>https://sunshinejr.com/tags/marathon/</loc>
     <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/series/open-source-adventures/</loc>
+    <loc>https://sunshinejr.com/tags/moya/</loc>
+    <lastmod>2018-04-11T17:01:01+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://sunshinejr.com/tags/open-source/</loc>
     <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/post/</loc>
+    <loc>https://sunshinejr.com/series/open-source-adventures/</loc>
     <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/</loc>
+    <loc>https://sunshinejr.com/post/</loc>
     <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/tags/python/</loc>
+    <loc>https://sunshinejr.com/</loc>
+    <lastmod>2018-04-23T18:00:10+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://sunshinejr.com/tags/python/</loc>
     <lastmod>2018-04-03T17:02:50+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/series/</loc>
+    <loc>https://sunshinejr.com/series/</loc>
     <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/speaking/</loc>
+    <loc>https://sunshinejr.com/speaking/</loc>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/tags/swift/</loc>
+    <loc>https://sunshinejr.com/tags/swift/</loc>
     <lastmod>2018-04-23T18:00:10+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/tags/</loc>
+    <loc>https://sunshinejr.com/tags/</loc>
     <lastmod>2018-04-03T17:02:50+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/tags/typescript/</loc>
+    <loc>https://sunshinejr.com/tags/typescript/</loc>
     <lastmod>2018-04-03T17:02:50+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://sunshinejr.com/tags/xiblint/</loc>
+    <loc>https://sunshinejr.com/tags/xiblint/</loc>
     <lastmod>2018-04-03T17:02:50+01:00</lastmod>
     <priority>0</priority>
   </url>
