@@ -271,6 +271,16 @@ nav.main-nav a.cta {
     color: #aaa;
 }
 
+#series_description {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 0px 40px 20px 40px;
+    line-height: 22px; 
+    font-size: 11pt;
+    margin-bottom: 40px;
+    color: #666;
+}
+
 .home #avatar {
     float: right;
     width: 40px;
@@ -374,11 +384,18 @@ em, i {
     text-align: center;
 }
 
-.post h1 {
+.post #series {
     margin-top: 0px;
     margin-bottom: 20px;
+    color: #F15A24;
+    font: 300 14pt "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.post h1 {
+    margin-top: 5px;
+    margin-bottom: 20px;
     color: #222;
-    font: 300 32px/1.4em "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 300 34pt "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .post h2 {
@@ -874,15 +891,16 @@ a.twitter {
 }
 
 .archive .post-link {
-    color: #8a8a8a;
+    color: #F15A24;
 }
 
 .archive .post-item:hover {
-    color: #5694f1;
+    text-decoration: underline;
+    color: #F15A24;
     transition: 0.3s ease-out;
 }
 .archive .post-item:hover .post-link {
-    color: #5694f1;
+    color: #F15A24;
 }
 
 .fa.fa-heart:hover {
