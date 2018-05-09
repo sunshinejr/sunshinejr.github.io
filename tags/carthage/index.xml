@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>carthage - Programming adventures by sunshinejr</title>
+    <link>https://sunshinejr.com/tags/carthage/</link>
+    <description>Recent content in carthage - Programming adventures by sunshinejr</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 08 May 2018 17:09:10 +0200</lastBuildDate>
+    
+        <atom:link href="https://sunshinejr.com/tags/carthage/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Open Source Adventures #3 - Carthage</title>
+      <link>https://sunshinejr.com/2018/05/08/open-source-adventures-carthage/</link>
+      <pubDate>Tue, 08 May 2018 17:09:10 +0200</pubDate>
+      
+      <guid>https://sunshinejr.com/2018/05/08/open-source-adventures-carthage/</guid>
+      <description>When there is a problem with a certain library in a certain package manager, should it be resolved by a library or the package manager itself? 🤔</description>
+    </item>
+    
+  </channel>
+</rss>

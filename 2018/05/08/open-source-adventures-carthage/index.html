@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="https://sunshinejr.com/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="Open Source Adventures #3 - Carthage"/>
+  <meta name="twitter:description" content="When there is a problem with a certain library in a certain package manager, should it be resolved by a library or the package manager itself? 🤔"/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.38.2" />
+		<title>Open Source Adventures #3 - Carthage &middot; Programming adventures by sunshinejr</title>
+		<link rel="shortcut icon" href="https://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/style.css?modified=20180506">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="https://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="https://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures by sunshinejr" />
+		
+
+		
+
+      <script src="https://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="https://sunshinejr.com/js/main.js"></script>
+      <script src="https://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='https://sunshinejr.com/'>Blog</a>
+	<a href='https://sunshinejr.com/about'>About</a>
+	<a href='https://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="https://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        Open Source Adventures #3 - Carthage
+                    </h1>
+                    <h2 class="headline">
+                    May 8, 2018 17:09
+                    
+                    · 5 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://sunshinejr.com/tags/open-source">#open-source</a>
+                          
+                              <a href="https://sunshinejr.com/tags/swift">#swift</a>
+                          
+                              <a href="https://sunshinejr.com/tags/carthage">#carthage</a>
+                          
+                              <a href="https://sunshinejr.com/tags/ios">#iOS</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    
+
+<p><img src="img/carthage_header.png" alt="Carthage" /></p>
+
+<p><a href="https://github.com/Carthage/Carthage">Carthage</a> is a simple, decentralised package manager. And while <a href="https://github.com/CocoaPods/CocoaPods">CocoaPods</a> is still the most mature package manager for iOS, Carthage is a good alternative because it&rsquo;s written in a language known to many iOS devs - <strong>Swift</strong> (where CocoaPods is written in Ruby).</p>
+
+<p>It is great to know that whenever you encounter a problem with your dependency manager, you can browse through the source code and fix the issue by yourself! All because the tool is written in a language that you use on a day-to-day basis.</p>
+
+<p>This reason <em>solely</em> should attract more people from the iOS community to contribute back. But, even though Carthage is written in Swift, many are still afraid of code contribution. One of the reasons, at least for me, is that Carthage uses reactive and functional programming somewhat excessively in its codebase. And when you combine it with the fact that dependency management is not an easy thing to implement <em>right</em>, the entry barrier seems rather high.</p>
+
+<h2 id="the-chicken-or-the-egg">The chicken or the egg?</h2>
+
+<p>Over at <a href="https://github.com/Moya/Moya">Moya</a>, we support Carthage as well as CocoaPods and <a href="https://github.com/apple/swift-package-manager/">Swift Package Manager</a>. And where with both CocoaPods and <strong>SPM</strong> we didn&rsquo;t have many problems, Carthage <a href="https://github.com/Moya/Moya/issues/345">was an issue since day one</a>:</p>
+
+<p><img src="img/moya_carthage_problems.png" alt="Moya problems with Carthage" /></p>
+
+<p>TL;DR Moya has a specific setup that doesn&rsquo;t work well using Carthage. Other dependency managers supported it out of the box, so we wanted to fix it on a Carthage level. Conclusion was that this feature would bring too much complexity to Carthage, so it was abandoned. We waited two years and the issue was raised yet again:</p>
+
+<p><img src="img/moya_carthage_problems2.png" alt="Moya problems with Carthage again" /></p>
+
+<p>This time someone found a way to implement a workaround on a Carthage level without introducing much complexity. The solution wasn&rsquo;t ideal from the users perspective, but it would solve all our problems with Carthage support. And so the <a href="https://github.com/Carthage/Carthage/pull/1990">implementation began</a>:</p>
+
+<p><img src="img/carthage_implementation1.png" alt="Carthage implementation PR" /></p>
+
+<p>Unfortunately, after few comments and fixes, <a href="https://github.com/Dschee">@Dschee</a> encountered a blocker - the reactive part of the PR:</p>
+
+<p><img src="img/carthage_implementation2.png" alt="Carthage implementation block" /></p>
+
+<p>And so the PR was frozen for about eight months till April this year. Then, <strong>@Dschee</strong> came back to us with few solutions that were <em>far from perfect</em>, but he felt that the Carthage fix won&rsquo;t be seeing the light of the day anytime soon. And because many people were waiting for a solution, we started discussing the possible fix.</p>
+
+<p>Unfortunately, I didn&rsquo;t like any of the proposed solutions. I wanted to get to know Carthage and finish the works, but the entry barrier was putting me off&hellip;</p>
+
+<p>And then we decided to make <a href="https://www.konsensieren.eu/en/konsensierung/kd8mvrdnd/anzeigen">a poll</a> and choose the best solution from what we had and go from there.</p>
+
+<p><img src="img/moya_carthage_poll.png" alt="Moya Carthage options poll" /></p>
+
+<p>Then, just before the end of the poll, one of Moya&rsquo;s contributors, <a href="https://github.com/petester42">@petester42</a>, stepped in and helped with finishing the works on the Carthage PR - this was something I didn&rsquo;t even wish for at that time, but it was incredible. We finally had a good compromise that we could all agree on.</p>
+
+<p><img src="img/carthage_pr_finished.png" alt="Carthage PR finished" /></p>
+
+<h2 id="the-ci-problem">The &ldquo;CI&rdquo; problem</h2>
+
+<p>About two weeks later I was fighting with our CI setup and as it turned out, our Carthage build didn&rsquo;t want to pass. So I started googling for issues on Carthage and found <a href="https://github.com/Carthage/Carthage/issues/1411">one that was quite similar to our case</a>:</p>
+
+<p><img src="img/carthage_issue.png" alt="Carthage issue similar to our CI problem" /></p>
+
+<p>The author, <a href="https://github.com/3lvis">@3lvis</a>, started implementing the fix, but when he encountered a non-helpful error message, he seemed to abandon the works as no activity was found for about seven months straight. And unfortunately, after an extensive investigation, this issue wasn&rsquo;t even connected to our problem.</p>
+
+<p>But still, there was an attempt to fix it, some of the works were already done, and I understood what potential solution would look like so I started digging. Additionally, I felt sorry that I didn&rsquo;t do much to help with the Carthage issue before, so I had a chance to make up for it (at least a little bit).</p>
+
+<h2 id="implementing-the-fix">Implementing the fix</h2>
+
+<p>Setting up a development environment for Carthage was really easy. One command in the terminal, a few minutes later and I could start developing. Their <a href="https://github.com/Carthage/Carthage/blob/master/CONTRIBUTING.md">contributing documentation</a> was pretty helpful at explaining how to run the updated executable or how to come back to the original version - kudos!</p>
+
+<p>The implementation was quite interesting. I didn&rsquo;t know what to expect because I had many nightmares about reactive/functional/imperative spaghetti before. There was a <strong>currying library</strong> here or <strong>custom operators like pipe</strong> there, but the code wasn&rsquo;t that hard for me to reason about. I was pleasantly surprised because overall experience was far better than I thought it would be.</p>
+
+<p>I started looking if there was a similar functionality to what I was trying to achieve and, to my surprise, there was! I couldn&rsquo;t really copy/paste it (👿), but I learned the overall design so I could <a href="https://github.com/Carthage/Carthage/pull/2438">implement something similar</a>:</p>
+
+<p><img src="img/carthage_pr_2.png" alt="Carthage PR with --archive option" /></p>
+
+<p>When I created the PR with the fix (which in fact was a feature), one of the contributors, <a href="https://github.com/blender">@blender</a>, asked if this PR is making an alias on existing functionality&hellip; And then I figured that I didn&rsquo;t test and push the whole code&hellip; I&rsquo;ve missed one commit 🤦🏼‍♂️</p>
+
+<p><img src="img/carthage_fkd_up.png" alt="Carthage PR mistake... original screen(tm)" /></p>
+
+<p>And so I had to rebuild the library, test it and then push again to the remote (this probably took more than the implementation to be honest). But finally, after one additional fix in the PR, my PR was merged:</p>
+
+<p><img src="img/carthage_pr_merged.png" alt="My Carthage PR merged" /></p>
+
+<p>And I could finally mark my &ldquo;Contribute to Carthage&rdquo; task as completed. ✅</p>
+
+<h1 id="finale">Finale</h1>
+
+<p>This whole situation with Moya and Carthage could&rsquo;ve been finished earlier if only I dared to try and finish the works last year. I felt bad for it, although I know I shouldn&rsquo;t - Open Source world is hard for people who do not work on it as a day-to-day job, and we have to choose and prioritise what&rsquo;s important and what&rsquo;s less important.</p>
+
+<p>I&rsquo;m thrilled that I finally got to give back to the Carthage community, though. They are great people that try their best, and I appreciate that a lot. The only thing that&rsquo;s missing, in my opinion, is a better environment for beginners: labels for what is a <code>good-starter</code> task, or maybe <a href="https://github.com/Moya/Moya/blob/master/Contributing.md">Moya&rsquo;s community guidelines</a>. Having more hands to work on this project would make it even more awesome than it is now 😉</p>
+
+                </section>
+            </article>
+
+            
+                <span style="float: right;">
+<a class="twitter" href="https://twitter.com/intent/tweet?text=Open%20Source%20Adventures%20%233%20-%20Carthage%20by @thesunshinejr - https%3a%2f%2fsunshinejr.com%2f2018%2f05%2f08%2fopen-source-adventures-carthage%2f"><span class="icon-twitter"> tweet</span></a>
+or
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> share</span>
+</a>
+</span>
+<div style="clear: both;"></div>
+            
+
+            
+                <div id="gh-comments-list"><h1>Comments</h1></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/4"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/4/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>
