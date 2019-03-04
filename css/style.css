@@ -399,15 +399,15 @@ em, i {
 }
 
 .post h2 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font: 300 24px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #111;
+    font: 300 28px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #111; 
+    padding-top: 20pt;
+    padding-bottom: 10pt;    
 }
 
 .post h2.headline {
     font: normal 13px/1.5em "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin: -5px 0 0 0;
+    padding-top: 0px;
     color: #b2b9be;
     font-size: 13px;
     letter-spacing: 1px;
