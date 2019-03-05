@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="https://sunshinejr.com/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="Open Source Adventures #4 - Harvey"/>
+  <meta name="twitter:description" content="A retrospection of Moya&#39;s testing library."/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.48" />
+		<title>Open Source Adventures #4 - Harvey &middot; Programming adventures by sunshinejr</title>
+		<link rel="shortcut icon" href="https://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/style.css?modified=20180506">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="https://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="https://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures by sunshinejr" />
+		
+
+		
+
+      <script src="https://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="https://sunshinejr.com/js/main.js"></script>
+      <script src="https://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='https://sunshinejr.com/'>Blog</a>
+	<a href='https://sunshinejr.com/about'>About</a>
+	<a href='https://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="https://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <center><img src="img/harvey_logo.png" alt="Harvey logo" style="width: 15%;" /></center>
+                    <h1>
+                        Open Source Adventures #4 - Harvey
+                    </h1>
+                    <h2 class="headline">
+                    Mar 5, 2019 19:50
+                    
+                    · 4 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://sunshinejr.com/tags/open-source">#open-source</a>
+                          
+                              <a href="https://sunshinejr.com/tags/swift">#swift</a>
+                          
+                              <a href="https://sunshinejr.com/tags/moya">#moya</a>
+                          
+                              <a href="https://sunshinejr.com/tags/ios">#iOS</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    
+
+<p>The year 2018. I started the blog with a handful of success stories covered in my <strong>Open Source Adventures</strong> series. I thought that it would be entertaining to reflect upon each adventure and learn from my mistakes. Unfortunately, once I&rsquo;ve got into a situation without a happy ending, I struggled. I couldn&rsquo;t get a word out, and it saddened me deeply - so I stopped trying.</p>
+
+<p>Burnout knocked into my door faster than expected. Funnily enough, I didn&rsquo;t expect it at all. In hindsight, I know that I should&rsquo;ve written the post and move on. I didn&rsquo;t do it back then, but I&rsquo;ve managed to do it this year.</p>
+
+<p>Let me tell you a story about <strong>Harvey</strong>, <a href="https://github.com/Moya/Moya">Moya</a>&rsquo;s testing library.</p>
+
+<h2 id="backstory">Backstory</h2>
+
+<p>It all started in September 2017. We were looking for a network-response-stubbing library at Moya that could also support <strong>Swift Package Manager</strong>. <a href="https://github.com/AliSoftware/OHHTTPStubs">OHHTTPStubs</a> is an excellent tool, but it didn&rsquo;t support <strong>SPM</strong>, and it wasn&rsquo;t easy to do so back then.</p>
+
+<p>I spoke to <a href="https://twitter.com/ashfurrow">Ash</a> about the idea of a new library under the Moya organization. He was very supportive (as always!), we picked a fitting name (fun fact: all of the repository names in Moya&rsquo;s organization come from <a href="https://en.wikipedia.org/wiki/Farscape">Farscape</a> series), and I started tinkering.</p>
+
+<p>I&rsquo;ve spent the first few weeks on learning <code>URLProtocol</code> specs and how to provide stubbed responses using its API. Finally, I landed a <strong>Pull Request</strong> with a <strong>Proof of Concept</strong> and a few tests around it - I must say I was proud of that one.</p>
+
+<h2 id="mid-life-crisis">Mid-life crisis</h2>
+
+<p>After the <strong>PoC</strong> there was only one feature left (plus some documentation and integration works). However, I felt like I needed a short break from Harvey, and <a href="https://sunshinejr.com/2018/04/03/open-source-adventures-xiblint/">started checking out other projects like Xiblint or Danger</a>.</p>
+
+<p>In the meantime, few people from the community got interested in Harvey and started contributing to the project. We&rsquo;ve got documentation, vision file and even logo - all done pretty quickly. Then, <a href="https://twitter.com/orta">Orta</a> opened a PR with a <strong>Work In Progress</strong> version of his new project, <a href="https://github.com/danger/swift">Danger Swift</a>. Around that time I was experimenting with <a href="https://sunshinejr.com/2018/04/03/open-source-adventures-xiblint/">Xiblint</a> and also used Harvey as a playground. The project quickly transformed from <em>network-response-stubber</em> to more of a utility repository that we could play on.</p>
+
+<h2 id="the-unavoidable">The unavoidable</h2>
+
+<p>Few months passed by and I was back working on the missing pieces so we could release Harvey to the public. As I mentioned before, from the code perspective, we&rsquo;ve only had one feature to implement - support for default <code>URLSessionConfiguration</code>`s. And, as you probably already know, this is when it all went downhill.</p>
+
+<p>Predefined configurations (<code>.default</code> and <code>.ephemeral</code>) didn&rsquo;t work properly, unless we swizzled them at the loading level. We couldn&rsquo;t do it in Swift, as both <code>load</code> &amp; <code>initialize</code> methods were not available anymore. This left us in a situation where we had to use <strong>Objective-C</strong>.  It wasn&rsquo;t an option, as we would duplicate the work done in <code>OHHTTPStubs</code>. Thus, we had two options: either we find a way of fixing it on a Swift level, or we close <code>Harvey</code> and support <code>OHHTTPStubs</code> instead.</p>
+
+<p>I&rsquo;ve created an issue on Harvey&rsquo;s repository where I explained the problem. Asked some friends, used a lot of Swift voodoo, but I could sense that I would have to close the project eventually. After a long period of waiting in silence, I&rsquo;ve added another comment to the issue. This time it was a death sentence on Harvey.</p>
+
+<p>I wanted to delete the repository many times, but it was difficult. Each time I was hoping that there is a way of keeping it alive. That someone would chime in and help us go through it. That there was some hidden Swift feature or an <strong>SPM</strong> flag. None of that happened. And all I could think of was the number of hours I&rsquo;ve wasted by not taking decisive action.</p>
+
+<p>Then, a <a href="https://www.raywenderlich.com/5121-moya-tutorial-for-ios-getting-started">new blog post appeared on Ray Wenderlich with an introduction to Moya</a>. <a href="https://twitter.com/freak4pc">Shai</a>, when writing the post, created a discussion group with <a href="https://twitter.com/_SD10_">Steven</a> and me so we could provide feedback before it was released. Only when it was out, though, I&rsquo;ve noticed a note about Harvey:</p>
+
+<p><img src="img/moya_blog_harvey.png" alt="A note about Harvey in a blog post" /></p>
+
+<p>Instead of asking Shai to update the part, I just vanished for another few months.</p>
+
+<h2 id="unexpected-finish">Unexpected finish</h2>
+
+<p>It was 2019 already. I woke up and decided that it was time. I had to close Harvey as quickly as possible and start maintaining projects that I abandoned. I deleted the repository on a whim and, unfortunately, I didn&rsquo;t take any screenshots that I could add to this retrospection. How fitting!</p>
+
+<p>Could I&rsquo;ve done better? For sure.</p>
+
+<p>Open Source Projects fail all the time. Be it lack of maintenance, ideas or motivation. Harvey failed because I didn&rsquo;t do complete research before starting the project. I decided to do it on the fly and in the open. I don&rsquo;t blame myself for this one, no.</p>
+
+<p>What I <em>could</em> do better was a decisive action when I knew that this project wasn&rsquo;t going places. It would make everyone more productive, myself included. People wouldn&rsquo;t have been confused, and I wouldn&rsquo;t need to explain <em><strong>why</strong></em>.</p>
+
+<p>Now I know.</p>
+
+                </section>
+            </article>
+
+            
+                <span style="float: right;">
+share on
+<a class="twitter" href="https://twitter.com/intent/tweet?text=Open%20Source%20Adventures%20%234%20-%20Harvey%20by @thesunshinejr - https%3a%2f%2fsunshinejr.com%2f2019%2f03%2f05%2fopen-source-adventures-harvey%2f"><span class="icon-twitter"></span></a>
+or 
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"></span>
+</a>
+</span>
+<div style="clear: both;"></div>
+            
+
+            
+                <div id="gh-comments-list"><h1>Comments</h1></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/5"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/5/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>
