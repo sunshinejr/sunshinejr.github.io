@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="https://sunshinejr.com/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="SwiftyUserDefaults 4.0"/>
+  <meta name="twitter:description" content="After a year of work, we finally released version 4."/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.48" />
+		<title>SwiftyUserDefaults 4.0 &middot; Programming adventures by sunshinejr</title>
+		<link rel="shortcut icon" href="https://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/style.css?modified=20180506">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="https://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="https://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures by sunshinejr" />
+		
+
+		
+
+      <script src="https://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="https://sunshinejr.com/js/main.js"></script>
+      <script src="https://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='https://sunshinejr.com/'>Blog</a>
+	<a href='https://sunshinejr.com/about'>About</a>
+	<a href='https://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="https://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    
+                    <h1>
+                        SwiftyUserDefaults 4.0
+                    </h1>
+                    <h2 class="headline">
+                    May 1, 2019 18:01
+                    
+                    · 4 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://sunshinejr.com/tags/open-source">#open-source</a>
+                          
+                              <a href="https://sunshinejr.com/tags/swift">#swift</a>
+                          
+                              <a href="https://sunshinejr.com/tags/swiftyuserdefaults">#swiftyuserdefaults</a>
+                          
+                              <a href="https://sunshinejr.com/tags/ios">#iOS</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    
+
+<p>I&rsquo;m really happy to say that <strong>SwiftyUserDefaults 4</strong> was finally released at the end of last week. Due to changes of Swift 4 and 5, the core of the library was rewritten from the ground up. Don&rsquo;t worry, though, as the API is almost untouched and the new version introduces mostly improvements and additions. Here is a short summary of what&rsquo;s inside.</p>
+
+<h2 id="default-values">Default values</h2>
+
+<p>Probably the most noticeable change in version 4 is handling of default values. In version 3 you would do a following:</p>
+
+<pre><code class="language-swift">let key = DefaultsKey&lt;String&gt;(&quot;username&quot;)
+let username = Defaults[key]
+</code></pre>
+
+<p>And the username would be either the value saved to <code>UserDefaults</code> or a default value (<code>&quot;&quot;</code> for <code>String</code>). Version 4 removes that - <strong>now you have to make the default value explicit</strong>:</p>
+
+<pre><code class="language-swift">let key = DefaultsKey&lt;String&gt;(&quot;username&quot;, defaultValue: &quot;admin1&quot;)
+let username = Defaults[key]
+</code></pre>
+
+<p>Of course, you might want to use an optional type instead and we support that as well:</p>
+
+<pre><code class="language-swift">let key = DefaultsKey&lt;String?&gt;(&quot;username&quot;)
+let username = Defaults[key]
+</code></pre>
+
+<p>You can also set a default value for an optional key. Be careful, though! The behavior of default value is &ldquo;either return a value that is stored in <code>UserDefaults</code> or return the default value&rdquo;. This means that if you save <code>nil</code>, you will receive the default value when accessing the key. In case you want to only set the value at the very first time, you would have to do it manually.</p>
+
+<h2 id="codable-nscoding-enums">Codable, NSCoding, enums</h2>
+
+<p>Version 4 introduces a new protocol, <code>DefaultsSerializable</code>. If you want to store any type that implements <code>Codable</code>, <code>NSCoding</code> or is an enum, just add <code>DefaultsSerializable</code> to the implementation list of your type:</p>
+
+<pre><code class="language-swift">final class Frog: Codable, DefaultsSerializable {
+    let name: String
+ }
+</code></pre>
+
+<pre><code class="language-swift">extension UIColor: DefaultsSerializable {}
+</code></pre>
+
+<p>No implementation needed! If you, however, would have a custom type that you would like to store in <code>UserDefaults</code>, then&hellip;</p>
+
+<h2 id="custom-types">Custom types</h2>
+
+<p>&hellip; worry no more. Version 4 was written with customization in mind - it uses &ldquo;bridges&rdquo; to know the get/set protocol for a type. You can check <a href="https://github.com/radex/SwiftyUserDefaults#custom-types">this part of the Readme</a> to get the details of how to implement your own bridge or how to replace an existing one for a type, but here is an example of a bridge that persists the value as an <code>Int</code>:</p>
+
+<pre><code class="language-swift">open class DefaultsIntBridge: DefaultsBridge&lt;Int&gt; {
+    open override func save(key: String, value: Int?, userDefaults: UserDefaults) {
+        userDefaults.set(value, forKey: key)
+    }
+
+    open override func get(key: String, userDefaults: UserDefaults) -&gt; Int? {
+        if let int = userDefaults.number(forKey: key)?.intValue {
+            return int
+        }
+
+        // Fallback for launch arguments
+        if let string = userDefaults.object(forKey: key) as? String,
+            let int = Int(string) {
+            return int
+        }
+
+        return nil
+    }
+}
+</code></pre>
+
+<h2 id="kvo-support">KVO support</h2>
+
+<p>We also introduced a layer on top of <code>UserDefaults</code> and <code>KVO</code> so it feels more Swifty 😉</p>
+
+<pre><code>let key = DefaultsKey&lt;String?&gt;(&quot;username&quot;)
+Defaults.observe(key: key) { update in
+	// here you can access `oldValue`/`newValue` etc.
+}
+</code></pre>
+
+<h2 id="launch-arguments-support">Launch arguments support</h2>
+
+<p>Updating <code>UserDefaults</code> using launch arguments seems to be a hot topic and we don&rsquo;t want to take all the fun from you. Version 4 supports <code>String</code>, <code>Bool</code>, <code>Double</code> and <code>Int</code> based launch arguments.</p>
+
+<pre><code class="language-swift">func testExample() {
+    let app = XCUIApplication()
+    app.launchArguments = [&quot;-skipLogin&quot;, &quot;true&quot;, &quot;-loginTries&quot;, &quot;3&quot;, &quot;-lastGameTime&quot;, &quot;61.3&quot;, &quot;-nickname&quot;, &quot;sunshinejr&quot;]
+    app.launch()
+}
+</code></pre>
+
+<h2 id="cocoapods-carthage-swiftpackagemanager-support">CocoaPods/Carthage/SwiftPackageManager support</h2>
+
+<p>It&rsquo;s important for us to get this release out to everyone that wants to play with it. Because of that, we support all of the package managers mentioned above and have integration tests for each one of them that runs on every pull request.</p>
+
+<h2 id="swift-4-1-4-2-5-0-xcode-10-2-support">Swift 4.<sup>1</sup>&frasl;<sub>4</sub>.<sup>2</sup>&frasl;<sub>5</sub>.0 &amp; Xcode 10.2 support</h2>
+
+<p>And the CI integration doesn&rsquo;t stop on package managers only. We  also have multiple Swift version builds to compliment the package managers integration tests. This should make the maintenance of this library a lot easier in the future.</p>
+
+<h2 id="migration-guide">Migration guide</h2>
+
+<p><a href="https://github.com/radex/SwiftyUserDefaults/blob/master/MigrationGuides/migration_3_to_4.md">Here is a migration guide if you are transitioning from version 3 to 4.</a></p>
+
+<h2 id="more">More</h2>
+
+<p>All of this and more available at <a href="https://github.com/radex/SwiftyUserDefaults#launch-arguments">GitHub</a>.</p>
+
+<p>Hope you all enjoy it.</p>
+
+                </section>
+            </article>
+
+            
+                <span style="float: right;">
+share on
+<a class="twitter" href="https://twitter.com/intent/tweet?text=SwiftyUserDefaults%204.0%20by @thesunshinejr - https%3a%2f%2fsunshinejr.com%2f2019%2f05%2f01%2fswifty-user-defaults-reborn%2f"><span class="icon-twitter"></span></a>
+or 
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"></span>
+</a>
+</span>
+<div style="clear: both;"></div>
+            
+
+            
+                <div id="gh-comments-list"><h1>Comments</h1></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/6"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/6/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>
