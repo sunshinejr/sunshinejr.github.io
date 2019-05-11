@@ -1006,13 +1006,22 @@ a.symbol:hover {
     color: #5694f1;
 }
 
+#related-content h2 {
+    padding-top: 0pt;
+    margin-top: -10pt;
+}
+
+#related-content li {
+    padding-top: 5pt;
+}
+
 #gh-comments-list {
     display: flex; 
     flex-direction: column;
 }
 
-#gh-comments-list h1 {
-    font-weight: bold;
+#gh-comments-list h2 {
+    padding-top: 0px;
 }
 
 .gh-comment {
