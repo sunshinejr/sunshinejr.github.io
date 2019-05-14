@@ -206,9 +206,10 @@ nav.main-nav {
     margin: 0 auto;
     z-index: 100;
     text-align: center;
+    width: 400px;
 }
 
-nav.main-nav a {
+nav.main-nav a, .main-nav-link {
     top: 8px;
     right: 6px;
     padding: 8px 12px;
