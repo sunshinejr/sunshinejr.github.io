@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="https://sunshinejr.com/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="Using Xcode Preview with your production code"/>
+  <meta name="twitter:description" content="Everyone is happy for SwiftUI, but a lot of production code won&#39;t be able to use it for a while. Don&#39;t worry though - you can still prototype your views using the newest Xcode Preview."/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.48" />
+		<title>Using Xcode Preview with your production code &middot; Programming adventures by sunshinejr</title>
+		<link rel="shortcut icon" href="https://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/style.css?modified=20180506">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="https://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="https://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures by sunshinejr" />
+		
+
+		
+
+      <script src="https://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="https://sunshinejr.com/js/main.js"></script>
+      <script src="https://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='https://sunshinejr.com/'>Blog</a>
+	<a href='https://sunshinejr.com/about'>About</a>
+	<a href='https://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="https://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    
+                    <h1>
+                        Using Xcode Preview with your production code
+                    </h1>
+                    <h2 class="headline">
+                    Jun 4, 2019 23:40
+                    
+                    · 3 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://sunshinejr.com/tags/swift">#Swift</a>
+                          
+                              <a href="https://sunshinejr.com/tags/swiftui">#SwiftUI</a>
+                          
+                              <a href="https://sunshinejr.com/tags/xcode">#Xcode</a>
+                          
+                              <a href="https://sunshinejr.com/tags/xcode-preview">#Xcode Preview</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    
+
+<p>Everyone is happy for SwiftUI, but real production code won&rsquo;t be able to use it for a while. Not only SwiftUI is available starting iOS 13, but also many devices won&rsquo;t be able to upgrade to iOS 13. Thus, if you cut iOS 12 from your minimum deployment target, you might lose a significant portion of your audience. So if you&rsquo;re like me and you want (or need) to support lower iOS targets at least for the next year, you can still use Xcode Preview for prototyping.</p>
+
+<h2 id="create-new-app-preview-target-and-scheme">Create new _App_Preview target and scheme</h2>
+
+<p>Important thing for me is to isolate my preview environment from the production one. To do that, I&rsquo;m using a custom Target and a custom Scheme. I cloned my &ldquo;production&rdquo; target to save up some:</p>
+
+<p><center><img src="img/demo_new_preview_target.gif" alt="Create new preview target" style="width: 320px;" /></center></p>
+
+<p>Then I&rsquo;ve added a new scheme for the new target.</p>
+
+<h2 id="make-your-views-view-controllers-representable">Make your views/view controllers representable</h2>
+
+<p>SwiftUI brings two new protocols to bridge your views and view controllers to the declarative world: <code>UIViewRepresentable</code> and <code>UIViewControllerRepresentable</code>. I&rsquo;m gonna use one of my Demo controllers, <code>PostsViewController</code>, to implement <code>UIViewControllerRepresentable</code>.</p>
+
+<p>To do that I&rsquo;m gonna create a new file, called <code>PostsViewController+Preview.swift</code> and make it available <strong>only to my <code>DemoPreview</code> target</strong>. This way I can easily separate preview code with production code:</p>
+
+<pre><code class="language-swift">#if DEBUG
+import SwiftUI
+
+extension PostsViewController: UIViewControllerRepresentable {
+
+    typealias UIViewControllerType = PostsViewController
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext&lt;UIViewControllerType&gt;) -&gt; UIViewControllerType {
+        return PostsViewController()
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: UIViewControllerRepresentableContext&lt;UIViewControllerType&gt;) {
+        // update the controller
+    }
+}
+
+
+struct PostsViewController_Previews : PreviewProvider {
+    static var previews: some View {
+        PostsViewController()
+    }
+
+    static var platform: PreviewPlatform? = .iOS
+}
+#endif
+</code></pre>
+
+<p>Now, depending on the mood, Xcode should show you the Preview window! If it doesn&rsquo;t happen, however, try to select any other file and then go back to the extension. And, if your project compiles, you should now see your view controller in the new Xcode Preview.</p>
+
+<p>If it <em>still</em> doesn&rsquo;t show you the view there is a pretty helpful message most of the time with explanation <em>why</em> (e.g. I had to switch to Swift 5 in this target to use it).</p>
+
+<h2 id="prototyping">Prototyping</h2>
+
+<p>Sadly, the Preview window won&rsquo;t show up on our main controller code (probably because we declared the preview in an extension). There is a trick for that as well. Add a new editor in your Xcode 11 (similar to adding Assistant Editor in Xcode 10). Now on one side you can open the controller (for me it would be <code>PostsViewController</code>) and on the other the extension with a preview (<code>PostsViewController+Preview</code>). Now just update the height of the extension editor + preview.</p>
+
+<p>Here is how it looks and works for my small demo project:
+<center><img src="img/demo_preview_reload.gif" style="width: 320px;" /></center></p>
+
+<h2 id="current-caveats">Current Caveats</h2>
+
+<ul class="task-list">
+<li><label><input type="checkbox" checked disabled class="task-list-item"> No hot reloading</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> Might take long to recompile your view</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> Crashes, about 50% of the time (please help me send radars)</label></li>
+</ul>
+
+<p>Even with all these problems it&rsquo;s still better (at least for me) than Playgrounds. And if the problems with crashes will be resolved, it should be a great tool for prototyping in the future.</p>
+
+                </section>
+            </article>
+
+            
+                <br />
+                <hr />
+                <div style="float: left;">
+</div>                
+                <div style="float: right;"><div id="share-content">
+share:
+<a class="twitter" href="https://twitter.com/intent/tweet?text=Using%20Xcode%20Preview%20with%20your%20production%20code%20by @thesunshinejr - https%3a%2f%2fsunshinejr.com%2f2019%2f06%2f04%2fusing-xcode-previews-with-production-code%2f"><span class="icon-twitter"></span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"></span>
+</a>
+</div></div>
+                <div style="clear: both;"></div>
+            
+
+            
+                <hr />
+                <div id="gh-comments-list"><h2>Comments</h2></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/8"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/8/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>

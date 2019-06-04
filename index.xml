@@ -6,10 +6,19 @@
     <description>Recent content - Programming adventures by sunshinejr</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 14 May 2019 17:11:10 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 04 Jun 2019 23:40:01 +0200</lastBuildDate>
     
         <atom:link href="https://sunshinejr.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using Xcode Preview with your production code</title>
+      <link>https://sunshinejr.com/2019/06/04/using-xcode-previews-with-production-code/</link>
+      <pubDate>Tue, 04 Jun 2019 23:40:01 +0200</pubDate>
+      
+      <guid>https://sunshinejr.com/2019/06/04/using-xcode-previews-with-production-code/</guid>
+      <description>Everyone is happy for SwiftUI, but a lot of production code won&#39;t be able to use it for a while. Don&#39;t worry though - you can still prototype your views using the newest Xcode Preview.</description>
+    </item>
     
     <item>
       <title>Open Source Adventures #5 - SwiftyUserDefaults</title>

@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://sunshinejr.com/2019/06/04/using-xcode-previews-with-production-code/</loc>
+    <lastmod>2019-06-04T23:40:01+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://sunshinejr.com/2019/05/14/open-source-adventures-swiftyuserdefaults/</loc>
     <lastmod>2019-05-14T17:11:10+02:00</lastmod>
   </url>
@@ -85,13 +90,13 @@
   
   <url>
     <loc>https://sunshinejr.com/post/</loc>
-    <lastmod>2019-05-14T17:11:10+02:00</lastmod>
+    <lastmod>2019-06-04T23:40:01+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://sunshinejr.com/</loc>
-    <lastmod>2019-05-14T17:11:10+02:00</lastmod>
+    <lastmod>2019-06-04T23:40:01+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -113,7 +118,13 @@
   
   <url>
     <loc>https://sunshinejr.com/tags/swift/</loc>
-    <lastmod>2019-05-14T17:11:10+02:00</lastmod>
+    <lastmod>2019-06-04T23:40:01+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://sunshinejr.com/tags/swiftui/</loc>
+    <lastmod>2019-06-04T23:40:01+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -132,6 +143,18 @@
   <url>
     <loc>https://sunshinejr.com/tags/typescript/</loc>
     <lastmod>2018-04-03T17:02:50+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://sunshinejr.com/tags/xcode/</loc>
+    <lastmod>2019-06-04T23:40:01+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://sunshinejr.com/tags/xcode-preview/</loc>
+    <lastmod>2019-06-04T23:40:01+02:00</lastmod>
     <priority>0</priority>
   </url>
   
