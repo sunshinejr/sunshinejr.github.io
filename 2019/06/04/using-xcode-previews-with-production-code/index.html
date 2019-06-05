@@ -120,7 +120,7 @@
 
 <p>Important thing for me is to isolate my preview environment from the production one. To do that, I&rsquo;m using a custom Target and a custom Scheme. I cloned my &ldquo;production&rdquo; target to save up some:</p>
 
-<p><center><img src="img/demo_new_preview_target.gif" alt="Create new preview target" style="width: 320px;" /></center></p>
+<p><center><img src="img/demo_new_preview_target.gif" alt="Create new preview target" style="width: 480px;" /></center></p>
 
 <p>Then I&rsquo;ve added a new scheme for the new target.</p>
 
@@ -166,7 +166,7 @@ struct PostsViewController_Previews : PreviewProvider {
 <p>Sadly, the Preview window won&rsquo;t show up on our main controller code (probably because we declared the preview in an extension). There is a trick for that as well. Add a new editor in your Xcode 11 (similar to adding Assistant Editor in Xcode 10). Now on one side you can open the controller (for me it would be <code>PostsViewController</code>) and on the other the extension with a preview (<code>PostsViewController+Preview</code>). Now just update the height of the extension editor + preview.</p>
 
 <p>Here is how it looks and works for my small demo project:
-<center><img src="img/demo_preview_reload.gif" style="width: 320px;" /></center></p>
+<center><img src="img/demo_preview_reload.gif" style="width: 480px;" /></center></p>
 
 <h2 id="current-caveats">Current Caveats</h2>
 
