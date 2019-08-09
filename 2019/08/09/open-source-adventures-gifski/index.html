@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="https://sunshinejr.com/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="Open Source Adventures #6 - Gifski"/>
+  <meta name="twitter:description" content="How I started doing macOS apps and improved my favorite GIF client."/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.48" />
+		<title>Open Source Adventures #6 - Gifski &middot; Programming adventures by sunshinejr</title>
+		<link rel="shortcut icon" href="https://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/style.css?modified=20180506">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="https://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="https://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures by sunshinejr" />
+		
+
+		
+
+      <script src="https://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="https://sunshinejr.com/js/main.js"></script>
+      <script src="https://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='https://sunshinejr.com/'>Blog</a>
+	<a href='https://sunshinejr.com/about'>About</a>
+	<a href='https://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="https://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <center><img src="img/gifski_logo.png" alt="Gifski logo" style="width: 15%;" /></center>
+                    <h1>
+                        Open Source Adventures #6 - Gifski
+                    </h1>
+                    <h2 class="headline">
+                    Aug 9, 2019 18:08
+                    
+                    · 6 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://sunshinejr.com/tags/open-source">#open-source</a>
+                          
+                              <a href="https://sunshinejr.com/tags/swift">#swift</a>
+                          
+                              <a href="https://sunshinejr.com/tags/macos">#macOS</a>
+                          
+                              <a href="https://sunshinejr.com/tags/gifski">#gifski</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    
+
+<p>Open Source is beautiful. I use an <strong>open-sourced app</strong> called <a href="https://sindresorhus.com/gifski">Gifski</a> to create <strong>GIFs</strong> in my <strong>Pull Requests</strong> and <strong>JIRA tickets</strong>. And, because I use the app a lot, I had my list of things I would like to see in the upcoming versions, e.g.:</p>
+
+<ul>
+<li>better width/height controls</li>
+<li>removed &ldquo;save panel&rdquo; at the beginning of the conversion</li>
+<li>built-in trimming</li>
+<li>better support for small-sized GIFs</li>
+</ul>
+
+<p>Normally I would just send an e-mail with suggestions on how to improve the product, but because the app is open-sourced, I could just implement all of it myself. Did I manage to do that? Almost!</p>
+
+<p><br /></p>
+
+<h1 id="background">Background</h1>
+
+<p><center><img src="img/gifski_old.gif" alt="Gifski 1,5" style="width: 75%;" /><div class="note">This is how Gifski looked back then.</div></center></p>
+
+<p>It all started when I saw <a href="https://twitter.com/sindresorhus">Sindre</a> tweeting about Gifski and that it would use some contribution. I always wanted to <em>contribute to Gifski one day</em>, but it totally got off of my radar. I didn&rsquo;t have bigger plans in the pipeline back then and so I knew that it was my time to help with the app.</p>
+
+<p>I started looking around to see what tasks were available for a <strong>novice</strong> like me. A novice, because I had zero knowledge about GIFs underlying structure, macOS app development or the Gifski app itself. But then I saw a perfect task: <a href="https://github.com/sindresorhus/Gifski/issues/68">a list of &ldquo;quick fixes&rdquo; across the app</a>.</p>
+
+<p><center><img src="img/various_improvements_issue.png" alt="PR with various improvements" style="width: 75%;" /></center></p>
+
+<p>I think you get the idea. Most of these improvements were TODOs and code issues related to <strong>Swift</strong> - and this is really my comfort zone. Not only because I think I&rsquo;m doing a good job with Swift, but also because this would allow me to explore the app.</p>
+
+<p>I immediately &ldquo;assigned&rdquo; myself to it and started tinkering:
+<center><img src="img/first_issue_comment.png" alt="My comment that says \"I will take the task\" in the GH issue" style="width: 75%;" /></center></p>
+
+<p>And for the next few days I was exploring the app&hellip; But it didn&rsquo;t work out that well. I was stuck on one of the bullet points in the list (related to <strong>AppKit</strong>&hellip;) and I decided to stop and look around for some other issues instead.</p>
+
+<p>I found two tasks that seemed to me like &ldquo;low-hanging fruits&rdquo;:<br />
+- <a href="https://github.com/sindresorhus/Gifski/issues/66">QuickLook on the result GIF</a><br />
+- <a href="https://github.com/sindresorhus/Gifski/issues/47">System Service support</a></p>
+
+<p>I &ldquo;finished&rdquo; both of these on the same day and created two PRs (<a href="https://github.com/sindresorhus/Gifski/pull/79">#79</a>, <a href="https://github.com/sindresorhus/Gifski/pull/80">#80</a>):</p>
+
+<p><center><img src="img/quicklook_pr.png" alt="My PR for the QuickLook issue" style="width: 75%;" /></center>
+<center><img src="img/systemservice_pr.png" alt="My PR for the System Service issue" style="width: 75%;" /></center></p>
+
+<p>&hellip; but they weren&rsquo;t that good as well. I was still learning AppKit and I quickly realized that I didn&rsquo;t fully understand some of the components I used. And so I had to spend some time after the PRs to read about differences in AppKit and UIKit (especially <a href="https://twitter.com/thesunshinejr/status/1129746913836838914">Responder Chain 😅</a>).</p>
+
+<p>Also this was my first time working with Sindre and it really felt different than all of the things I used to do in OSS before. Sindre has an eye for detail and his reviews were really spot on. We touched a lot more than just the context of a PR. He was keen to <em>improve everything that didn&rsquo;t feel good</em>, even though it might not have been in the specs before. I know that it&rsquo;s not something that everyone likes, but this is something I really appreciate - all in all <strong>we both wanted to create something great</strong>. And so we went back &amp; forth with with comments, UX/UI changes and code cleanups. After <strong>2 weeks of work</strong> and total of <strong>63 comments</strong>, finally my first PRs were merged:</p>
+
+<p><center><img src="img/quicklook_merged.png" alt="My PR for QuickLook got merged" style="width: 75%;" /></center></p>
+
+<p><br /></p>
+
+<h1 id="implementing-my-personal-wishlist">Implementing my personal wishlist</h1>
+
+<p>Given the confidence after two merged PRs, I was able to bring the big guns&hellip;</p>
+
+<h2 id="better-width-height-controls">Better width/height controls</h2>
+
+<p>The biggest problem I had with Gifski was that I wasn&rsquo;t able to precisely select width/height without spending a minute or two with a slider. And so the idea was to replace the sliders with text fields instead.</p>
+
+<p>This was something that many people wanted as well and there was even a <a href="https://github.com/sindresorhus/Gifski/pull/49">PR that was working</a>. The problem was that the PR was abandoned, code was pretty &ldquo;dirty&rdquo; and there were some bugs/missing pieces. Oh, and also few Sindre&rsquo;s comments that weren&rsquo;t implemented as well. The author wanted to finish it, but didn&rsquo;t have time to do so. So I had to gather all that info in one place, make a todo-list with a fresh PR and then make it work. Pretty simple, eh?</p>
+
+<p><center><img src="img/dimensions_pr.png" alt="My PR for better width/height controls" style="width: 75%;" /></center></p>
+
+<p>Yup. <strong>112 comments</strong>, <strong>more than a month of work</strong> and about <strong>2 times where I thought to myself that I don&rsquo;t have much energy left for this one</strong>.</p>
+
+<p>Why? I think my problem was that I started working on someone else&rsquo;s code instead of writing it from scratch. There were many cases where I would be really confused about what is going on. I would add one feature and then it would break some other things.  But finally I realized that I have to completely rewrite it so I can unit test the underlying logic. After that (and few other issues), the PR was merged as well:</p>
+
+<p><center><img src="img/dimensions_pr_merged.png" alt="My PR for better width/height controls got merged!" style="width: 75%;" /></center></p>
+
+<p>(as you can see it was really hard one for both of us 😅)</p>
+
+<h2 id="add-gifski-metadata-to-the-generated-gif">Add Gifski metadata to the generated GIF</h2>
+
+<p>After the previous PR I was really exhausted and I needed another quick-win-PR that would boost my confidence (and so I can continue implementing the rest of the list). So I found a task for adding metadata that says <strong>&ldquo;This GIF was created by Gifski&rdquo;</strong>.</p>
+
+<p>This task wasn&rsquo;t something I needed but it sounded pretty straight-forward. Unfortunately, it wasn&rsquo;t. I had to figure out what metadata type is supported by GIFs and what is the best way to do it in macOS. <a href="https://github.com/sindresorhus/Gifski/pull/93">But in the end, it was still easier than the width/height one</a>.</p>
+
+<p><center><img src="img/metadata_example.png" alt="Added metadata for GIF creator" style="width: 50%;" /></center></p>
+
+<h2 id="removed-save-panel-at-the-beginning-of-the-conversion">Removed “save panel” at the beginning of the conversion</h2>
+
+<p>Back to the big guns. Another problems I had with Gifski was that it wanted me to save the GIF before it was even created. I just wanted to be able to create a GIF, copy it and that&rsquo;s it. No need for it to be sleeping on my desktop.</p>
+
+<p>In terms of code this one was probably even harder than the width/height one. To achieve what we wanted, I had to completely <strong>rewrite the whole app view architecture</strong> to use separate view controllers instead of one view and showing/hiding things. <a href="https://github.com/sindresorhus/Gifski/pull/94">And so this one also took about a month of work</a>.</p>
+
+<p><center><img src="img/savepanel_pr.png" alt="My PR for removed save panel at the beginning of the conversion" style="width: 75%;" /></center></p>
+
+<h2 id="built-in-trimming">Built-in trimming</h2>
+
+<p>This is the last feature from my list that got into Gifski 2.0. I just wanted a quick way of trimming the video and make it a GIF.</p>
+
+<p>What&rsquo;s interesting in this part is that we had to scrap the view hierarchy to hide buttons and adjust it to our needs. Then use some KVO to get the trimming range. In the end this is something that is supposedly pretty common in AppKit development, but I&rsquo;m still getting used to that. But the PR was a fast one this time and it closed the list of features I&rsquo;ve managed to sneak into version 2. And this is the final product:</p>
+
+<p><center><img src="img/gifski_new.gif" alt="New Gifski 2.0" style="width: 75%;" /></center></p>
+
+<p>It was awesome to work on an app you use every day, especially in the open. Thanks again to Sindre for the guidance (and everything, really). I will for sure make another appearance on the Gifski PR tab. (Low-quality GIFs still needs to be done&hellip; ;-)</p>
+
+                </section>
+            </article>
+
+            
+                <br />
+                <hr />
+                <div style="float: left;">
+
+<div id="related-content">
+	<h2>You might also like:</h3>
+	<ul>
+		
+		<li><a href="/2019/05/14/open-source-adventures-swiftyuserdefaults/">Open Source Adventures #5 - SwiftyUserDefaults</a></li>
+		
+		<li><a href="/2019/05/01/swifty-user-defaults-reborn/">SwiftyUserDefaults 4.0</a></li>
+		
+		<li><a href="/2019/03/05/open-source-adventures-harvey/">Open Source Adventures #4 - Harvey</a></li>
+		
+		<li><a href="/2018/05/08/open-source-adventures-carthage/">Open Source Adventures #3 - Carthage</a></li>
+		
+		<li><a href="/2018/04/23/open-source-adventures-marathon/">Open Source Adventures #2 - Marathon</a></li>
+		
+	</ul>
+</div>
+</div>                
+                <div style="float: right;"><div id="share-content">
+share:
+<a class="twitter" href="https://twitter.com/intent/tweet?text=Open%20Source%20Adventures%20%236%20-%20Gifski%20by @thesunshinejr - https%3a%2f%2fsunshinejr.com%2f2019%2f08%2f09%2fopen-source-adventures-gifski%2f"><span class="icon-twitter"></span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"></span>
+</a>
+</div></div>
+                <div style="clear: both;"></div>
+            
+
+            
+                <hr />
+                <div id="gh-comments-list"><h2>Comments</h2></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/9"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/9/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>
