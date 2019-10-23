@@ -188,7 +188,7 @@ struct Delayed&lt;Value&gt; {
 }
 </code></pre>
 
-<p>and run the app. Unfrotunately, as expected, it won&rsquo;t work. Why?  It will crash on runtime:<br />
+<p>and run the app. Unfortunately, as expected, it won&rsquo;t work. Why?  It will crash on runtime:<br />
 <blockquote>Terminating app due to uncaught exception &lsquo;NSUnknownKeyException&rsquo;, reason: &lsquo;[<Demo.PostsViewController 0x7fd50a50ecf0> setValue:forUndefinedKey:]: this class is not key value coding-compliant for the key contentView.&rsquo;</blockquote></p>
 
 <p>Ah okay so it actually needs to be <code>IBOutlet</code> anyways (I thought to myself). Somehow it needs to establish a connection between the interface and the code, probably by using Objc runtime. So I tried:</p>
@@ -208,7 +208,7 @@ struct Delayed&lt;Value&gt; {
 }
 </code></pre>
 
-<p>Bingo. When compiled, it worked without any runtime errors. For me, this is a deal-breaker and I cannot wait to use this property wrapper everywhere. Hope you find it useful as well.</p>
+<p>Bingo. When compiled, it worked without any runtime errors. For me, this is a no-brainer and I cannot wait to use this property wrapper everywhere. Hope you find it useful as well.</p>
 
 <p>Now, I think, this is just a matter of time when <code>IBOutlet</code>s will remove the force-unwrapping and we all will live a happy life.</p>
 
