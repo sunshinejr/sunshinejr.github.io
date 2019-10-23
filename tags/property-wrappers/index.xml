@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>property wrappers - Programming adventures by sunshinejr</title>
+    <link>https://sunshinejr.com/tags/property-wrappers/</link>
+    <description>Recent content in property wrappers - Programming adventures by sunshinejr</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 23 Oct 2019 16:12:01 +0200</lastBuildDate>
+    
+        <atom:link href="https://sunshinejr.com/tags/property-wrappers/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Stop using IBOutlets. Today.</title>
+      <link>https://sunshinejr.com/2019/10/23/stop-using-iboutlets-today/</link>
+      <pubDate>Wed, 23 Oct 2019 16:12:01 +0200</pubDate>
+      
+      <guid>https://sunshinejr.com/2019/10/23/stop-using-iboutlets-today/</guid>
+      <description>Take a look at how Property Wrappers can remove the need of using both IBOutlets and force-unwrapping.</description>
+    </item>
+    
+  </channel>
+</rss>

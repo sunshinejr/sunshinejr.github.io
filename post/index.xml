@@ -6,10 +6,19 @@
     <description>Recent content in posts - Programming adventures by sunshinejr</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 09 Aug 2019 18:08:10 +0200</lastBuildDate>
+    <lastBuildDate>Wed, 23 Oct 2019 16:12:01 +0200</lastBuildDate>
     
         <atom:link href="https://sunshinejr.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Stop using IBOutlets. Today.</title>
+      <link>https://sunshinejr.com/2019/10/23/stop-using-iboutlets-today/</link>
+      <pubDate>Wed, 23 Oct 2019 16:12:01 +0200</pubDate>
+      
+      <guid>https://sunshinejr.com/2019/10/23/stop-using-iboutlets-today/</guid>
+      <description>Take a look at how Property Wrappers can remove the need of using both IBOutlets and force-unwrapping.</description>
+    </item>
     
     <item>
       <title>Open Source Adventures #6 - Gifski</title>

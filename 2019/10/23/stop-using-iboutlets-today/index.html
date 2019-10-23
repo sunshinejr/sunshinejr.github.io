@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="https://sunshinejr.com/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="Stop using IBOutlets. Today."/>
+  <meta name="twitter:description" content="Take a look at how Property Wrappers can remove the need of using both IBOutlets and force-unwrapping."/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.48" />
+		<title>Stop using IBOutlets. Today. &middot; Programming adventures by sunshinejr</title>
+		<link rel="shortcut icon" href="https://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/style.css?modified=20180506">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="https://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="https://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures by sunshinejr" />
+		
+
+		
+
+      <script src="https://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="https://sunshinejr.com/js/main.js"></script>
+      <script src="https://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='https://sunshinejr.com/'>Blog</a>
+	<a href='https://sunshinejr.com/about'>About</a>
+	<a href='https://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="https://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <center><img src="img/iboutlets_header.png" alt="IBOutlets in Xcode" /></center><br />
+                    <h1>
+                        Stop using IBOutlets. Today.
+                    </h1>
+                    <h2 class="headline">
+                    Oct 23, 2019 16:12
+                    
+                    · 3 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://sunshinejr.com/tags/swift">#swift</a>
+                          
+                              <a href="https://sunshinejr.com/tags/iboutlets">#IBOutlets</a>
+                          
+                              <a href="https://sunshinejr.com/tags/ios">#iOS</a>
+                          
+                              <a href="https://sunshinejr.com/tags/property-wrappers">#property wrappers</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    
+
+<p>Earlier this week I needed a way of initializing a variable just after the &ldquo;proper initialization&rdquo; to have access to the other, previously initialized, properties. To do this in Swift, we usually use force-unwrapped types:</p>
+
+<pre><code class="language-swift">final class ThemeManager {
+    let theme: Theme			
+    let colorScheme: ColorScheme
+
+    private(set) var colors: ThemeColors!	
+
+    init() {
+        theme = ...
+        colorScheme = ...
+        colors = theme.themeColors(for: colorScheme)
+    }
+}
+</code></pre>
+
+<p>Now the penalty of doing that is that we always have to deal with force-unwrapped optional afterwards. And sometimes it&rsquo;s just really painful when you want to create a clean API for transforming types and now you have to deal with an <code>Optional</code>, which in fact is not an <code>Optional</code> at all.</p>
+
+<p>Fortunately, Swift 5.1 introduced property wrappers that could actually remove the need of this force-unwrapped type!</p>
+
+<p>Given this <code>@Delayed</code> property wrapper:</p>
+
+<pre><code class="language-swift">@propertyWrapper
+struct Delayed&lt;Value&gt; {
+    private var _value: Value? = nil
+    
+    var wrappedValue: Value {
+        get {
+            guard let value = _value else {
+                fatalError(&quot;Property accessed before being initialized.&quot;)
+            }
+            return value
+        }
+        set {
+            _value = newValue
+        }
+    }
+}
+</code></pre>
+
+<p>We can actually remove the unnecessary <code>!</code> in the type declaration:</p>
+
+<pre><code class="language-swift">final class ThemeManager {
+    let theme: Theme			
+    let colorScheme: ColorScheme
+		
+    @Delayed private(set) var colors: ThemeColors		
+
+    init() {
+        theme = ...
+        colorScheme = ...
+        colors = theme.themeColors(for: colorScheme)
+    }
+}
+</code></pre>
+
+<p>This made me supper happy. But, of course, I didn&rsquo;t stop there.</p>
+
+<h1 id="iboutlets">IBOutlets</h1>
+
+<p>I started wondering - can we actually use this technique in  <code>IBOutlet</code>s? It should be possible, right? Let&rsquo;s replace:</p>
+
+<pre><code class="language-swift">final class PostsViewController: UIViewController {
+    @IBOutlet private var contentView: UIView!
+}
+</code></pre>
+
+<p>with:</p>
+
+<pre><code class="language-swift">final class PostsViewController: UIViewController {
+    @Delayed private var contentView: UIView
+}
+</code></pre>
+
+<p>and run the app. Unfrotunately, as expected, it won&rsquo;t work. Why?  It will crash on runtime:<br />
+<blockquote>Terminating app due to uncaught exception &lsquo;NSUnknownKeyException&rsquo;, reason: &lsquo;[<Demo.PostsViewController 0x7fd50a50ecf0> setValue:forUndefinedKey:]: this class is not key value coding-compliant for the key contentView.&rsquo;</blockquote></p>
+
+<p>Ah okay so it actually needs to be <code>IBOutlet</code> anyways (I thought to myself). Somehow it needs to establish a connection between the interface and the code, probably by using Objc runtime. So I tried:</p>
+
+<pre><code class="language-swift">final class PostsViewController: UIViewController {
+    @IBOutlet @Delayed private var contentView: UIView
+}
+</code></pre>
+
+<p>but then I got the compile time error:<br />
+<blockquote>@IBOutlet property has non-optional type &lsquo;UIView&rsquo;</blockquote></p>
+
+<p>So still no luck. Seems like <code>IBOutlet</code> has a constraint on the type (which sounds reasonable). But, fortunately, there is <code>@objc</code> which also exposes the property to Objc runtime and doesn&rsquo;t have that constraint.</p>
+
+<pre><code class="language-swift">final class PostsViewController: UIViewController {
+    @Delayed @objc private var contentView: UIView
+}
+</code></pre>
+
+<p>Bingo. When compiled, it worked without any runtime errors. For me, this is a deal-breaker and I cannot wait to use this property wrapper everywhere. Hope you find it useful as well.</p>
+
+<p>Now, I think, this is just a matter of time when <code>IBOutlet</code>s will remove the force-unwrapping and we all will live a happy life.</p>
+
+                </section>
+            </article>
+
+            
+                <br />
+                <hr />
+                <div style="float: left;">
+
+<div id="related-content">
+	<h2>You might also like:</h3>
+	<ul>
+		
+		<li><a href="/2019/05/01/swifty-user-defaults-reborn/">SwiftyUserDefaults 4.0</a></li>
+		
+		<li><a href="/2019/03/05/open-source-adventures-harvey/">Open Source Adventures #4 - Harvey</a></li>
+		
+		<li><a href="/2018/05/08/open-source-adventures-carthage/">Open Source Adventures #3 - Carthage</a></li>
+		
+		<li><a href="/2018/04/11/scaling-moya-in-production/">Scaling Moya in production</a></li>
+		
+		<li><a href="/2019/08/09/open-source-adventures-gifski/">Open Source Adventures #6 - Gifski</a></li>
+		
+	</ul>
+</div>
+</div>                
+                <div style="float: right;"><div id="share-content">
+share:
+<a class="twitter" href="https://twitter.com/intent/tweet?text=Stop%20using%20IBOutlets.%20Today.%20by @thesunshinejr - https%3a%2f%2fsunshinejr.com%2f2019%2f10%2f23%2fstop-using-iboutlets-today%2f"><span class="icon-twitter"></span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"></span>
+</a>
+</div></div>
+                <div style="clear: both;"></div>
+            
+
+            
+                <hr />
+                <div id="gh-comments-list"><h2>Comments</h2></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/10"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/10/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>
