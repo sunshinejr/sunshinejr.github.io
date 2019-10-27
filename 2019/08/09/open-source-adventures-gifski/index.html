@@ -268,7 +268,7 @@ share:
                         t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
                         t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
                         t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
-                        t += "commented on " + date.getUTCDay() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "commented on " + date.getUTCDate() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
                         t += "</div><div class='gh-comment-body'>";
                         t += comment.body_html;
                         t += "</div>";
