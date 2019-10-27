@@ -1,12 +1,29 @@
 /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
 
+:root {
+  color-scheme: light dark;
+
+  --code-background: #f0f0f0;
+  --code-color: #808080;
+  --code-border: #E4EBF2;
+}
+
+/* DARK MODE */
+@media (prefers-color-scheme: dark) {
+  :root {    
+     --code-background: #f0f0f004;
+     --code-color: #f1f1f1cc;
+     --code-border:  rgba(228, 235, 242, 0.329);
+  }
+}
+
 code {
-    background: #f0f0f0;
+    background: var(--code-background);
     font-size: 14px;
     /*font-weight: 100;*/
     padding: 4px;
     border: none;
-    box-shadow: inset 0 0 0 1px #E4EBF2;
+    box-shadow: inset 0 0 0 1px var(--code-border);
     border-radius: 4px;
     overflow: scroll;
     font-family: 'Menlo', 'Monaco', Courier, monospace;
@@ -20,10 +37,10 @@ pre code {
     padding: 16px;
     padding-bottom: 14px;
     display: block;
-    color: #808080;
-    background: #f2f2f2;
+    color: var(--code-color);
+    background: var(--code-background);
     border: none;
-    box-shadow: inset 0 0 0 1px #E4EBF2;
+    box-shadow: inset 0 0 0 1px var(--code-border);
     border-radius: 4px;
     overflow: auto;
 }

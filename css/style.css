@@ -1,5 +1,28 @@
 /* Reset */
 
+:root {
+    color-scheme: light dark;
+ 
+    --background: #ffffff;
+    --body-color: #606060;
+    --header-color: #222;
+    --comment-header-color: #F6F8FA;
+    --comment-header-border: #d1d5da;
+    --quote-background: #f0f0f0;
+ }
+
+ /* DARK MODE */
+@media (prefers-color-scheme: dark) {
+    :root {
+       --background: #1c1c1c;
+       --body-color: #b2b2b2;
+       --header-color: #f3f3f3;    
+       --comment-header-color: #0a0a0a;       
+       --comment-header-border: rgba(228, 235, 242, 0.329);
+       --quote-background: #f0f0f004;
+    }
+ }
+
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
     border: 0;
     font-size: 100%;
@@ -14,7 +37,9 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 
 body {
-    line-height: 1
+    line-height: 1;
+    background-color: var(--background);
+    color: var(--body-color);
 }
 
 blockquote, q {
@@ -117,7 +142,6 @@ html, body {
 
 body {
     font: 16px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #666;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
@@ -125,7 +149,7 @@ body {
 h1 {
     font-size: 30px;
     letter-spacing: -1px;
-    color: #222;
+    color: var(--header-color);
     font-weight: bold;
 }
 
@@ -186,7 +210,7 @@ h2 {
     font-weight: 400;
     letter-spacing: 0px;
     font-size: 20px;
-    color: #222;
+    color: var(--header-color);
 }
 
 .profile h2 {
@@ -201,8 +225,6 @@ h2 {
 nav.main-nav {
     /* padding: 20px 20px 0; */
     padding-top: 20px;
-    background: #fff;
-    background: rgba(255, 255, 255, .90);
     margin: 0 auto;
     z-index: 100;
     text-align: center;
@@ -227,8 +249,6 @@ nav.main-nav a.cta {
 @media (max-width: 700px) {
   nav.main-nav {
       padding: 20px 10px 0 0;
-      background: #fff;
-      background: rgba(255, 255, 255, .90);
       margin: 0 auto;
       text-align: center;
       z-index: 100;
@@ -347,7 +367,7 @@ ul>li {
 
 b, strong {
     font-weight: 500;
-    color: #1E2025;
+    color: var(--header-color);
 }
 
 em, i {
@@ -372,7 +392,7 @@ em, i {
 .home h1 {
     font-size: 30px;
     letter-spacing: -1px;
-    color: #222;
+    color: var(--header-color);
     font-weight: bold;
 }
 
@@ -395,13 +415,13 @@ em, i {
 .post h1 {
     margin-top: 5px;
     margin-bottom: 20px;
-    color: #222;
+    color: var(--header-color);
     font: 300 34pt "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .post h2 {
     font: 300 28px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #111; 
+    color: var(--header-color);
     padding-top: 20pt;
     padding-bottom: 10pt;    
 }
@@ -435,7 +455,7 @@ em, i {
 }
 
 h3, h4, h5 {
-    color: #333;
+    color: var(--header-color);
 }
 
 h3 {
@@ -471,7 +491,8 @@ p.small {
 
 blockquote {
     padding-left: 15px;
-    border-left: 3px solid #eee;
+    border-left: 3px solid var(--comment-header-border);
+    background: var(--quote-background);
 }
 
 hr {
@@ -479,7 +500,7 @@ hr {
     border: none;
     height: 1px;
     margin: 40px auto;
-    background: #eee;
+    background: var(--comment-header-border);
 }
 
 table {
@@ -561,7 +582,7 @@ Post List
 }
 
 #post-list a {
-    color: #333;
+    color: var(--header-color);
     display: block;
     font: bold 19px/1.7 "Helvetica Neue", helvetica, Arial, sans-serif;
 }
@@ -747,7 +768,7 @@ h2.month {
 #archive-list a {
     display: block;
     font: bold 17px/1.7 "Helvetica Neue", helvetica, Arial, sans-serif;
-    color: #333;
+    color: var(--header-color);
 }
 
 #archive-list .dates {
@@ -1038,20 +1059,22 @@ a.symbol:hover {
 }
 
 .gh-comment .gh-comment-right {
-    border: 1px solid #d1d5da;
-    border-radius: 3pt;
+    border: 1px solid var(--comment-header-border);
+    box-shadow: inset 0 0 1px var(--comment-header-border);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
     flex-basis: auto;
     flex-grow: 2;
 }
 
 .gh-comment .gh-comment-right .gh-comment-title {
-    border-bottom: 1px solid #d1d5da;
+    border-bottom: 1px solid var(--comment-header-border);
     padding-left: 15pt; 
     padding-right: 15pt;
     height: 40pt; 
     display: flex; 
     align-items: center; 
-    background-color: #F6F8FA;
+    background-color: var(--comment-header-color);
     font-size: 10pt;
     flex-wrap: wrap;
     overflow: hidden;
@@ -1084,14 +1107,14 @@ a.symbol:hover {
 }
 
 .gh-comment .gh-comment-right .gh-comment-reactions {
-    border-top: 1px solid #e1e4e8;
+    border-top: 1px solid var(--comment-header-border);
     display: block;    
     box-sizing: border-box;
 }
 
 .gh-comment .gh-comment-right .gh-comment-reactions .gh-comment-reactions-option {
     padding: 10pt;
-    border-right: 1pt solid #e1e4e8;
+    border-right: 1pt solid var(--comment-header-border);
     display: table-cell;
     font-size: 11pt;
 }
