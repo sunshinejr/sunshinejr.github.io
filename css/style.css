@@ -17,7 +17,7 @@
        --background: #1c1c1c;
        --body-color: #b2b2b2;
        --header-color: #f3f3f3;    
-       --comment-header-color: #0a0a0a;       
+       --comment-header-color: #161616;       
        --comment-header-border: rgba(228, 235, 242, 0.329);
        --quote-background: #f0f0f004;
     }
@@ -1059,16 +1059,14 @@ a.symbol:hover {
 }
 
 .gh-comment .gh-comment-right {
-    border: 1px solid var(--comment-header-border);
-    box-shadow: inset 0 0 1px var(--comment-header-border);
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
+    box-shadow: inset 0 0 0 1px var(--comment-header-border);
+    border-radius: 4px;
     flex-basis: auto;
     flex-grow: 2;
 }
 
 .gh-comment .gh-comment-right .gh-comment-title {
-    border-bottom: 1px solid var(--comment-header-border);
+    box-shadow: inset 0 0 0 1px var(--comment-header-border);
     padding-left: 15pt; 
     padding-right: 15pt;
     height: 40pt; 
@@ -1078,6 +1076,8 @@ a.symbol:hover {
     font-size: 10pt;
     flex-wrap: wrap;
     overflow: hidden;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 
 .gh-comment .gh-comment-right .gh-comment-body {
