@@ -99,6 +99,8 @@
                           
                               <a href="https://sunshinejr.com/tags/swift">#swift</a>
                           
+                              <a href="https://sunshinejr.com/tags/ios">#iOS</a>
+                          
                               <a href="https://sunshinejr.com/tags/nsattributedstring">#NSAttributedString</a>
                           
                               <a href="https://sunshinejr.com/tags/stringinterpolation">#StringInterpolation</a>
@@ -166,7 +168,7 @@
 
 <p>This is just what worked for my projects. If you have even simpler views, you can probably remove the <code>ImportanceLevel</code>. If you have even more needs, then you could add support for attributes to images or extend the <code>ImportanceLevel</code>. The idea is that the type is really designed to fit the need of a product so to try and make it generic to produce a library was a little bit to much for me (though, if you would need different attributes for different types, you could also extract <code>Attributes</code> and make the <code>AttributedString&lt;Attributes&gt;</code> generic type).</p>
 
-<p>Also one thing to notice is how I collect the attributes. I really wanted to use enums with associated type and didn&rsquo;t want the attributes to duplicate. And so I use <code>Set</code> (which enforces the <code>Hashable</code> implementation) and also think beforehand if the attribute makes sense with all the other attributes. E.g. I could add <code>.veryImportant</code> attribute instead of using nested enums, but this would mean that I could pass <code>.veryImportant</code> and <code>.important</code> all at once and I don&rsquo;t like it from the API-designing perspective since it would probably be an undefined behavior.</p>
+<p>Also one thing to notice is how I collect the attributes. I really wanted to use enums with associated type and didn&rsquo;t want the attributes to duplicate. And so I use <code>Set</code> (which enforces the <code>Hashable</code> implementation) and also think beforehand if the attribute makes sense with all the other attributes.</p>
 
 <p>Oh, and also, I hid all the boilerplate of implementing the <code>ExpressibleByStringInterpolation</code> since there&rsquo;s not much going on (if you want full source though, scroll down!). The difference between my implementation and the ones I saw on the web is that I don&rsquo;t actually use <code>NSAttributedString</code> as an underlying storage, but I just collect parts of the string and let the <code>View</code> decide how it wants to render these parts on the screen. As an example, here&rsquo;s an excerpt from my <code>AttributedTextView</code> implementation:</p>
 
@@ -301,13 +303,13 @@ gameRules.set(attributedString: &quot;&quot;&quot;
 		
 		<li><a href="/2019/10/23/stop-using-iboutlets-today/">Stop force unwrapping IBOutlets with @Delayed</a></li>
 		
-		<li><a href="/2019/08/09/open-source-adventures-gifski/">Open Source Adventures #6 - Gifski</a></li>
-		
-		<li><a href="/2019/05/14/open-source-adventures-swiftyuserdefaults/">Open Source Adventures #5 - SwiftyUserDefaults</a></li>
-		
 		<li><a href="/2019/05/01/swifty-user-defaults-reborn/">SwiftyUserDefaults 4.0</a></li>
 		
 		<li><a href="/2019/03/05/open-source-adventures-harvey/">Open Source Adventures #4 - Harvey</a></li>
+		
+		<li><a href="/2018/05/08/open-source-adventures-carthage/">Open Source Adventures #3 - Carthage</a></li>
+		
+		<li><a href="/2018/04/11/scaling-moya-in-production/">Scaling Moya in production</a></li>
 		
 	</ul>
 </div>
