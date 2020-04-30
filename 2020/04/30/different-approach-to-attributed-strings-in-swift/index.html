@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="https://sunshinejr.com/images/avatar.png?modified=201910281" />
+    
+  
+  
+  <meta name="twitter:title" content="Different approach to Attributed Strings in Swift"/>
+  <meta name="twitter:description" content="Let&#39;s see how we can create a declarative, MVVM-friendly API for `AttributedStrings` that tells **what**, not **how** to render."/>
+  
+    <meta name="twitter:site" content="@thesunshinejr"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@Łukasz Mróz"/>
+  
+
+
+
+		
+		<meta name="author" content="Łukasz Mróz">
+		<meta name="description" content="Programming adventures">
+		<meta name="generator" content="Hugo 0.48" />
+		<title>Different approach to Attributed Strings in Swift &middot; Programming adventures by sunshinejr</title>
+		<link rel="shortcut icon" href="https://sunshinejr.com/images/favicon.ico">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/style.css?modified=201910281">
+		<link rel="stylesheet" href="https://sunshinejr.com/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="https://sunshinejr.com/css/font-awesome.min.css">
+		
+
+		
+		<link href="https://sunshinejr.com/index.xml" rel="alternate" type="application/rss+xml" title="Programming adventures by sunshinejr" />
+		
+
+		
+
+      <script src="https://sunshinejr.com/js/jquery-3.3.1.min.js"></script>
+      <script src="https://sunshinejr.com/js/main.js"></script>
+      <script src="https://sunshinejr.com/js/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+
+      
+
+      
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115200407-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-115200407-1');
+      </script>
+      
+
+      
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	<a href='https://sunshinejr.com/'>Blog</a>
+	<a href='https://sunshinejr.com/about'>About</a>
+	<a href='https://sunshinejr.com/speaking'>Speaking</a>
+
+	
+
+	
+	<a href="https://sunshinejr.com/index.xml">RSS</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    
+                    <h1>
+                        Different approach to Attributed Strings in Swift
+                    </h1>
+                    <h2 class="headline">
+                    Apr 30, 2020 19:01
+                    
+                    · 6 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://sunshinejr.com/tags/swift">#swift</a>
+                          
+                              <a href="https://sunshinejr.com/tags/nsattributedstring">#NSAttributedString</a>
+                          
+                              <a href="https://sunshinejr.com/tags/stringinterpolation">#StringInterpolation</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    
+
+<p>Both <code>StringInterpolation</code> and <code>NSAttributedString</code> were extensively explored back when <code>StringInterpolation</code> was released in Swift 5.0. I liked the idea, but something really put me off when I started actually implementing my screens:</p>
+
+<pre><code class="language-swift">let gameRules: AttributedString = &quot;&quot;&quot;
+  \(&quot;Monopoly&quot;, .color(.blue), .fontWeight(.bold))
+  \(&quot;1.&quot;, .fontWeight(.bold)) Each player rolls the dice to see who goes first.
+  ...
+  Learn more \(&quot;here&quot;, .url(&quot;https://simple.wikipedia.org/wiki/Monopoly_(game)&quot;), .color(.blue), .underline(.red, .single))
+&quot;&quot;&quot;
+</code></pre>
+
+<p>It is just the beginning and I already felt that this is gonna get pretty bloated pretty fast. And so, even though I really, really liked the idea of <code>StringInterpolation</code>, I didn&rsquo;t have a clue how to use it efficiently and improve my codebase while doing so.</p>
+
+<p>Last week, though, I&rsquo;ve been playing with different ideas for the <code>StringInterpolation</code> implementation and finally tried to poke around the <code>AttributedString</code> again. Eventually, I started playing with more declarative, abstracted declaration of an <code>AttributedString</code>:</p>
+
+<pre><code class="language-swift">let gameRules: AttributedString = &quot;&quot;&quot;
+    \(&quot;Monopoly&quot;, .important(.very))
+    \(&quot;1.&quot;, .important()) Each player rolls the dice to see who goes first.
+    ...
+    Learn more \(&quot;here&quot;, .tappable(openWikipedia))
+&quot;&quot;&quot;
+</code></pre>
+
+<p>This really felt good to write, not only because I didn&rsquo;t have to type all these styles again and again, but also because I separated the <strong>what</strong> from <strong>how</strong> - and this was huge for me.</p>
+
+<p>See, <code>NSAttributedString</code> is really interesting when you&rsquo;re using architecture that tries to separate the UI from the business logic. You can set both text/images, which are usually  translated or based on some conditional statements related to business logic, but also you can style these with <code>font</code>, <code>textColor</code> etc. which should really be a responsibility of a view layer to know how to render your data. Most of the time people just weight pros/cons of writing something that would help with that &ldquo;tiny detail&rdquo; of their architecture responsibilities and just go ahead and style the view in business-logic-controllers or, the other way around, move texts-logic to the views. Is it bad? As always, it depends, but at the end of the day what matters is that you ship the product rather than spend a week on an abstraction just because you didn&rsquo;t follow the pattern fully.</p>
+
+<p>This layer, though, is something really small and tailored for specific needs. Because I don&rsquo;t need more (even though I use the <code>AttriutedString</code> pretty extensively), I only declared two attributes (<code>important</code> and <code>tappable</code>) and two parts (<code>text</code>, <code>image</code>). Now, I can safely say to my view what parts of the texts should be texts/images, what should be tappable and what is really important to me. Then, view layer will create styles based on the instructions I passed.</p>
+
+<p>So how does the <code>AttributedString</code> implementation look like?</p>
+
+<pre><code class="language-swift">struct AttributedString: ExpressibleByStringInterpolation {
+    enum Attribute: Hashable {
+        enum ImportanceLevel: String, Equatable {
+            case very
+            case enought
+        }
+        case important(ImportanceLevel = .enought)
+        case tappable(id: String = UUID().uuidString, (() -&gt; Void)?)
+    }
+
+    enum Part {
+        case text(String, attributes: Set&lt;Attribute&gt; = Set())
+        case image(UIImage)
+    }
+
+    var children = [Part]()
+    var attributes = Set&lt;Attribute&gt;()
+
+    ...
+}
+</code></pre>
+
+<p>This is just what worked for my projects. If you have even simpler views, you can probably remove the <code>ImportanceLevel</code>. If you have even more needs, then you could add support for attributes to images or extend the <code>ImportanceLevel</code>. The idea is that the type is really designed to fit the need of a product so to try and make it generic to produce a library was a little bit to much for me (though, if you would need different attributes for different types, you could also extract <code>Attributes</code> and make the <code>AttributedString&lt;Attributes&gt;</code> generic type).</p>
+
+<p>Also one thing to notice is how I collect the attributes. I really wanted to use enums with associated type and didn&rsquo;t want the attributes to duplicate. And so I use <code>Set</code> (which enforces the <code>Hashable</code> implementation) and also think beforehand if the attribute makes sense with all the other attributes. E.g. I could add <code>.veryImportant</code> attribute instead of using nested enums, but this would mean that I could pass <code>.veryImportant</code> and <code>.important</code> all at once and I don&rsquo;t like it from the API-designing perspective since it would probably be an undefined behavior.</p>
+
+<p>Oh, and also, I hid all the boilerplate of implementing the <code>ExpressibleByStringInterpolation</code> since there&rsquo;s not much going on (if you want full source though, scroll down!). The difference between my implementation and the ones I saw on the web is that I don&rsquo;t actually use <code>NSAttributedString</code> as an underlying storage, but I just collect parts of the string and let the <code>View</code> decide how it wants to render these parts on the screen. As an example, here&rsquo;s an excerpt from my <code>AttributedTextView</code> implementation:</p>
+
+<pre><code class="language-swift">final class AttributedTextView: UITextView, UITextViewDelegate {
+    var attributesResolver: ((Set&lt;AttributedString.Attribute&gt;) -&gt; [NSAttributedString.Key: Any])?
+
+    private var links = [String: () -&gt; Void]()
+
+    ...
+
+    func set(attributedString: AttributedString) {
+        let attributes = nsAttributes(from: attributedString.attributes, addingDefaults: false)
+        let font = attributes[.font] as? UIFont ?? self.font
+
+        let nsAttributedString = attributedString.children
+            .map { part in
+                switch part {
+                case let .image(image):
+                    return NSAttributedString(attachment: centeredTextAttachment(image: image, font: font))
+                case let .text(string, attributes: attributes):
+                    return NSAttributedString(string: string, attributes: nsAttributes(from: attributes))
+                }
+            }
+            .reduce(NSAttributedString(), +)
+            .mutableCopy() as! NSMutableAttributedString
+
+        let range = NSRange(location: 0, length: nsAttributedString.length)
+        nsAttributedString.addAttributes(attributes, range: range)
+        attributedText = nsAttributedString
+        fitHeightToText()
+    }
+
+    ...
+
+    private func nsAttributes(from attributes: Set&lt;AttributedString.Attribute&gt;, addingDefaults: Bool = true) -&gt; [NSAttributedString.Key: Any] {
+        var nsAttributes = attributesResolver?(attributes) ?? [:]
+
+        if let tapAction = tapAction(from: attributes) {
+            let id = UUID().uuidString
+            links[id] = tapAction
+            nsAttributes[.link] = URL(string: id)
+        }
+
+        if addingDefaults {
+            if nsAttributes[.font] == nil {
+                nsAttributes[.font] = font
+            }
+
+            if nsAttributes[.foregroundColor] == nil {
+                nsAttributes[.foregroundColor] = textColor
+            }
+        }
+
+        return nsAttributes
+    }
+}
+</code></pre>
+
+<p>I hid some parts for customizing UI in <code>UITextView</code>, but essentially there is an <code>attributedResolver</code> block that can be passed as a resolver for inner attributes, otherwise we use defaults from the <code>View</code> (e.g. the <code>font</code> or <code>foregroundColor</code>). Example of a call-site:</p>
+
+<pre><code class="language-swift">private let gameRules: AttributedTextView = {
+    let textView = AttributedTextView()
+    textView.translatesAutoresizingMaskIntoConstraints = false
+    textView.isEditable = false
+    textView.isScrollEnabled = false
+    textView.font = .systemFont(ofSize: 14.0, weight: .regular)
+    textView.textColor = .gray
+    textView.attributesResolver = { attributes in
+        if let importantAttribute = attributes.first(where: { $0.isImportant }), attributes.contains(where: { $0.isTappable }) {
+            switch importantAttribute {
+            case let .important(level) where level == .very:
+                return [.foregroundColor: UIColor.blue, .underlineStyle: NSUnderlineStyle.single.rawValue, .font: UIFont.systemFont(ofSize: 24.0, weight: .bold)]
+            default:
+                return [.foregroundColor: UIColor.blue, .underlineStyle: NSUnderlineStyle.single.rawValue, .font: UIFont.systemFont(ofSize: 14.0, weight: .medium)]
+            }
+        } else {
+            return attributes.reduce(into: [NSAttributedString.Key: Any]()) { result, attribute in
+                switch attribute {
+                case let .important(level) where level == .very:
+                    result[.foregroundColor] = UIColor.blue
+                    result[.font] = UIFont.systemFont(ofSize: 16.0, weight: .bold)
+                case let .important(level):
+                    result[.foregroundColor] = UIColor.blue
+                    result[.font] = UIFont.systemFont(ofSize: 14.0, weight: .medium)
+                case .tappable:
+                    result[.underlineStyle] = NSUnderlineStyle.single.rawValue
+                    result[.font] = UIFont.systemFont(ofSize: 14.0, weight: .medium)
+                }
+            }
+        }
+    }
+
+    return textView
+}()
+
+gameRules.set(attributedString: &quot;&quot;&quot;
+    \(&quot;Monopoly&quot;, .important(.very))
+    \(ruleImage) \(&quot;1.&quot;, .important()) Each player rolls the dice to see who goes first.
+    \(ruleImage) \(&quot;2.&quot;, .important()) Whenever you land on a land that no one owns, you can buy it from the bank
+    ...
+    Learn more \(&quot;here&quot;, .tappable(openWikipedia), .important(.enought))
+&quot;&quot;&quot;)
+</code></pre>
+
+<p>And the result:</p>
+
+<p><center><img src="img/monopoly_preview.png" style="width: 320px;" /></center></p>
+
+<p>Of course, you might say that it&rsquo;s barely more readable for you than the version with explicit styling. However for me the styling makes me go out of the context of the stuff that I&rsquo;m writing: on one hand I&rsquo;m writing a text about rules of the game and then in the middle of that sentence I have to focus if the <code>URL</code> should have a blue color or not. Instead, I can just declare that the <code>URL</code> is important to me and figure out the styling later on.</p>
+
+<p>What are your thoughts? Would love to hear it!</p>
+
+<h3 id="links">Links</h3>
+
+<ul>
+<li><a href="https://gist.github.com/sunshinejr/36ac3adc243355273877840eb6f57aef">Full implementation from the post</a><br /></li>
+<li><a href="https://alisoftware.github.io/swift/2018/12/16/swift5-stringinterpolation-part2/">StringInterpolation in Swift 5 — AttributedStrings by AliSoftware</a><br /></li>
+<li><a href="https://github.com/indragiek/AttributedString.swift">indragiek/AttributedString.swift on GitHub</a></li>
+</ul>
+
+                </section>
+            </article>
+
+            
+                <br />
+                <hr />
+                <div style="float: left;">
+
+<div id="related-content">
+	<h2>You might also like:</h3>
+	<ul>
+		
+		<li><a href="/2019/10/23/stop-using-iboutlets-today/">Stop force unwrapping IBOutlets with @Delayed</a></li>
+		
+		<li><a href="/2019/08/09/open-source-adventures-gifski/">Open Source Adventures #6 - Gifski</a></li>
+		
+		<li><a href="/2019/05/14/open-source-adventures-swiftyuserdefaults/">Open Source Adventures #5 - SwiftyUserDefaults</a></li>
+		
+		<li><a href="/2019/05/01/swifty-user-defaults-reborn/">SwiftyUserDefaults 4.0</a></li>
+		
+		<li><a href="/2019/03/05/open-source-adventures-harvey/">Open Source Adventures #4 - Harvey</a></li>
+		
+	</ul>
+</div>
+</div>                
+                <div style="float: right;"><div id="share-content">
+share:
+<a class="twitter" href="https://twitter.com/intent/tweet?text=Different%20approach%20to%20Attributed%20Strings%20in%20Swift%20by @thesunshinejr - https%3a%2f%2fsunshinejr.com%2f2020%2f04%2f30%2fdifferent-approach-to-attributed-strings-in-swift%2f"><span class="icon-twitter"></span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"></span>
+</a>
+</div></div>
+                <div style="clear: both;"></div>
+            
+
+            
+                <hr />
+                <div id="gh-comments-list"><h2>Comments</h2></div>
+
+<script type="text/javascript">
+    var url = "https://github.com/sunshinejr\/sunshinejr.github.io/issues/11"
+    var api_url = "https://api.github.com/repos/sunshinejr\/sunshinejr.github.io/issues/11/comments"
+
+    $(document).ready(function () {
+        $.ajax(api_url, {
+            headers: { Accept: "application/vnd.github.squirrel-girl-preview.html+json" },
+            dataType: "json",
+            success: function(comments) {
+                if (comments.length > 0) {
+                    $.each(comments, function(i, comment) {
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                        var date = new Date(comment.created_at);
+                        var t = "<div class='gh-comment'>";
+                        t += "<div class='gh-comment-left'><img src='" + comment.user.avatar_url + "' style='width: 100%' /></div>";
+                        t += "<div class='gh-comment-right'><div class='gh-comment-title'>"
+                        t += "<b><a href='" + comment.user.html_url + "'>" + comment.user.login + "</a>&nbsp;</b>";
+                        t += "commented on " + date.getUTCDate() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                        t += "</div><div class='gh-comment-body'>";
+                        t += comment.body_html;
+                        t += "</div>";
+                        if (comment.reactions.total_count > 0) {
+                            var reaction = comment.reactions
+                            var emojis = [
+                                {"name": "heart", "emoji": "🧡"},
+                                {"name": "laugh", "emoji": "🤣"},
+                                {"name": "+1", "emoji": "👍"},
+                                {"name": "-1", "emoji": "👎"},
+                                {"name": "hooray", "emoji": "🎉"},
+                                {"name": "confused", "emoji": "😕"},
+                            ]
+                            t += "<div class='gh-comment-reactions'>";
+                            $.each(emojis, function(i, emoji) {
+                                if (reaction[emoji.name] > 0) {
+                                    t += "<div class='gh-comment-reactions-option'>" + emoji.emoji + " " + reaction[emoji.name] + "</div>";
+                                }
+                            });
+                            t += "</div>";
+                        }
+                        t += "</div></div>";
+                        $("#gh-comments-list").append(t);
+                    });
+                } else {
+                    $("#gh-comments-list").append("No comments yet.")
+                }
+                $("#gh-comments-list").append("<center><a href='" + url + "' class='button' target='_blank'>Add comment using GitHub issues</a></center>");                
+            },
+            error: function() {
+                $("#gh-comments-list").append("Comments are disabled for this post.");
+            }
+        });
+    });
+</script>
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/sunshinejr">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/thesunshinejr">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a>.
+    </p>
+</footer>
+
+        </section>
+    </body>
+</html>

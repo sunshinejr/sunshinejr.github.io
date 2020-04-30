@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nsattributedstring - Programming adventures by sunshinejr</title>
+    <link>https://sunshinejr.com/tags/nsattributedstring/</link>
+    <description>Recent content in nsattributedstring - Programming adventures by sunshinejr</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 30 Apr 2020 19:01:01 +0200</lastBuildDate>
+    
+        <atom:link href="https://sunshinejr.com/tags/nsattributedstring/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Different approach to Attributed Strings in Swift</title>
+      <link>https://sunshinejr.com/2020/04/30/different-approach-to-attributed-strings-in-swift/</link>
+      <pubDate>Thu, 30 Apr 2020 19:01:01 +0200</pubDate>
+      
+      <guid>https://sunshinejr.com/2020/04/30/different-approach-to-attributed-strings-in-swift/</guid>
+      <description>Let&#39;s see how we can create a declarative, MVVM-friendly API for `AttributedStrings` that tells **what**, not **how** to render.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -6,10 +6,19 @@
     <description>Recent content in posts - Programming adventures by sunshinejr</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 23 Oct 2019 16:12:01 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 30 Apr 2020 19:01:01 +0200</lastBuildDate>
     
         <atom:link href="https://sunshinejr.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Different approach to Attributed Strings in Swift</title>
+      <link>https://sunshinejr.com/2020/04/30/different-approach-to-attributed-strings-in-swift/</link>
+      <pubDate>Thu, 30 Apr 2020 19:01:01 +0200</pubDate>
+      
+      <guid>https://sunshinejr.com/2020/04/30/different-approach-to-attributed-strings-in-swift/</guid>
+      <description>Let&#39;s see how we can create a declarative, MVVM-friendly API for `AttributedStrings` that tells **what**, not **how** to render.</description>
+    </item>
     
     <item>
       <title>Stop force unwrapping IBOutlets with @Delayed</title>
