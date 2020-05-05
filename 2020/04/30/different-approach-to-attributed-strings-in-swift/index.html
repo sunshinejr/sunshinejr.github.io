@@ -148,9 +148,9 @@
     enum Attribute: Hashable {
         enum ImportanceLevel: String, Equatable {
             case very
-            case enought
+            case enough
         }
-        case important(ImportanceLevel = .enought)
+        case important(ImportanceLevel = .enough)
         case tappable(id: String = UUID().uuidString, (() -&gt; Void)?)
     }
 
@@ -269,7 +269,7 @@ gameRules.set(attributedString: &quot;&quot;&quot;
     \(ruleImage) \(&quot;1.&quot;, .important()) Each player rolls the dice to see who goes first.
     \(ruleImage) \(&quot;2.&quot;, .important()) Whenever you land on a land that no one owns, you can buy it from the bank
     ...
-    Learn more \(&quot;here&quot;, .tappable(openWikipedia), .important(.enought))
+    Learn more \(&quot;here&quot;, .tappable(openWikipedia), .important(.enough))
 &quot;&quot;&quot;)
 </code></pre>
 
