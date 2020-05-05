@@ -174,14 +174,19 @@
 
 <pre><code class="language-swift">final class AttributedTextView: UITextView, UITextViewDelegate {
     var attributesResolver: ((Set&lt;AttributedString.Attribute&gt;) -&gt; [NSAttributedString.Key: Any])?
+    var defaultAttributes = [NSAttributedString.Key: Any]()
 
     private var links = [String: () -&gt; Void]()
 
     ...
 
     func set(attributedString: AttributedString) {
-        let attributes = nsAttributes(from: attributedString.attributes, addingDefaults: false)
-        let font = attributes[.font] as? UIFont ?? self.font
+        if let defaultFont = defaultAttributes[.font] as? UIFont {
+            font = defaultFont
+        }
+        if let defaultTextColor = defaultAttributes[.foregroundColor] as? UIColor {
+            textColor = defaultTextColor
+        }
 
         let nsAttributedString = attributedString.children
             .map { part in
@@ -195,15 +200,17 @@
             .reduce(NSAttributedString(), +)
             .mutableCopy() as! NSMutableAttributedString
 
-        let range = NSRange(location: 0, length: nsAttributedString.length)
-        nsAttributedString.addAttributes(attributes, range: range)
+        if let paragraphStyle = defaultAttributes[.paragraphStyle] as? NSParagraphStyle {
+            let range = NSRange(location: 0, length: nsAttributedString.length)
+            nsAttributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: range)
+        }
         attributedText = nsAttributedString
         fitHeightToText()
     }
 
     ...
 
-    private func nsAttributes(from attributes: Set&lt;AttributedString.Attribute&gt;, addingDefaults: Bool = true) -&gt; [NSAttributedString.Key: Any] {
+    private func nsAttributes(from attributes: Set&lt;AttributedString.Attribute&gt;) -&gt; [NSAttributedString.Key: Any] {
         var nsAttributes = attributesResolver?(attributes) ?? [:]
 
         if let tapAction = tapAction(from: attributes) {
@@ -212,14 +219,12 @@
             nsAttributes[.link] = URL(string: id)
         }
 
-        if addingDefaults {
-            if nsAttributes[.font] == nil {
-                nsAttributes[.font] = font
-            }
+        if nsAttributes[.font] == nil {
+            nsAttributes[.font] = font
+        }
 
-            if nsAttributes[.foregroundColor] == nil {
-                nsAttributes[.foregroundColor] = textColor
-            }
+        if nsAttributes[.foregroundColor] == nil {
+            nsAttributes[.foregroundColor] = textColor
         }
 
         return nsAttributes
@@ -227,15 +232,15 @@
 }
 </code></pre>
 
-<p>I hid some parts for customizing UI in <code>UITextView</code>, but essentially there is an <code>attributedResolver</code> block that can be passed as a resolver for inner attributes, otherwise we use defaults from the <code>View</code> (e.g. the <code>font</code> or <code>foregroundColor</code>). Example of a call-site:</p>
+<p>I hid some parts for customizing UI in <code>UITextView</code>, but essentially there is an <code>attributedResolver</code> block that can be passed as a resolver for inner attributes and <code>defaultAttributes</code> property that&rsquo;s acting as a fallback. Example of a call-site:</p>
 
 <pre><code class="language-swift">private let gameRules: AttributedTextView = {
     let textView = AttributedTextView()
     textView.translatesAutoresizingMaskIntoConstraints = false
     textView.isEditable = false
     textView.isScrollEnabled = false
-    textView.font = .systemFont(ofSize: 14.0, weight: .regular)
-    textView.textColor = .gray
+    textView.defaultAttributes = [.font: UIFont.systemFont(ofSize: 14.0, weight: .regular),
+                                  .foregroundColor: UIColor.gray]
     textView.attributesResolver = { attributes in
         if let importantAttribute = attributes.first(where: { $0.isImportant }), attributes.contains(where: { $0.isTappable }) {
             switch importantAttribute {
